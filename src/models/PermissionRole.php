@@ -1,12 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace VitesseCms\User\Models;
 
 use VitesseCms\Database\AbstractCollection;
 
-/**
- * Class PermissionRole
- */
 class PermissionRole extends AbstractCollection
 {
 }

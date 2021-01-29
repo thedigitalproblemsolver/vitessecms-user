@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace VitesseCms\User\Controllers;
 
@@ -6,15 +6,8 @@ use VitesseCms\Admin\AbstractAdminController;
 use VitesseCms\User\Forms\PermissionRoleForm;
 use VitesseCms\User\Models\PermissionRole;
 
-/**
- * Class AdminpermissionroleController
- */
 class AdminpermissionroleController extends AbstractAdminController
 {
-    /**
-     * onConstruct
-     * @throws \Phalcon\Mvc\Collection\Exception
-     */
     public function onConstruct()
     {
         parent::onConstruct();

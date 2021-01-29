@@ -1,23 +1,11 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace VitesseCms\User\Factories;
 
 use VitesseCms\User\Models\PermissionRole;
 
-/**
- * Class PermissionRoleFactory
- */
 class PermissionRoleFactory
 {
-    /**
-     * @param string $name
-     * @param string $calling_name
-     * @param bool $published
-     * @param bool $adminAccess
-     * @param string|null $parentId
-     *
-     * @return PermissionRole
-     */
     public static function create(
         string $name,
         string $calling_name,

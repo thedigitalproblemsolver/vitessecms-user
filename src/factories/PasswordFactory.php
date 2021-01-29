@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace VitesseCms\User\Factories;
 
@@ -7,16 +7,8 @@ use VitesseCms\Core\Interfaces\BaseObjectInterface;
 use VitesseCms\User\Models\User;
 use Phalcon\Security\Random;
 
-/**
- * Class PasswordFactory
- */
 class PasswordFactory
 {
-    /**
-     * @param BaseObjectInterface|null $bindData
-     *
-     * @return User
-     */
     public static function createReset(): BaseObjectInterface
     {
         $item = ObjectFactory::create();

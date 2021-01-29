@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace VitesseCms\User\Controllers;
 
@@ -7,16 +7,8 @@ use VitesseCms\Database\AbstractCollection;
 use VitesseCms\User\Forms\UserForm;
 use VitesseCms\User\Models\User;
 
-/**
- * Class AdminuserController
- */
 class AdminuserController extends AbstractAdminController
 {
-
-    /**
-     * onConstruct
-     * @throws \Phalcon\Mvc\Collection\Exception
-     */
     public function onConstruct()
     {
         parent::onConstruct();
@@ -26,9 +18,6 @@ class AdminuserController extends AbstractAdminController
         $this->listOrder = 'email';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function beforeSave(AbstractCollection $item): void
     {
         if (
@@ -40,10 +29,6 @@ class AdminuserController extends AbstractAdminController
         endif;
     }
 
-    /**
-     * deleteAction
-     * @throws \Phalcon\Mvc\Collection\Exception
-     */
     public function deleteAction(): void
     {
         if ($this->user->getId() !== $this->dispatcher->getParam(0)) :
@@ -54,9 +39,6 @@ class AdminuserController extends AbstractAdminController
         endif;
     }
 
-    /**
-     * searchAction
-     */
     public function searchEmailAction(): void
     {
         if ($this->request->isAjax()) :

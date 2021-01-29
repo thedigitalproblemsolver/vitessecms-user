@@ -1,18 +1,11 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace VitesseCms\User\Forms;
 
 use VitesseCms\Form\AbstractForm;
 
-/**
- * PermissionRoleForm
- */
 class PermissionRoleForm extends AbstractForm
 {
-
-    /**
-     * initialize
-     */
     public function initialize()
     {
         $this->_(

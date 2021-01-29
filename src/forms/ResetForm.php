@@ -1,15 +1,11 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace VitesseCms\User\Forms;
 
 use VitesseCms\Form\AbstractForm;
 
-/**
- * Class ResetForm
- */
 class ResetForm extends AbstractForm
 {
-
     public function initialize()
     {
         $this->_(

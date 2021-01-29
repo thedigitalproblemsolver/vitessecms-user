@@ -8,10 +8,6 @@ use VitesseCms\User\Models\PermissionRole;
 
 class UserForm extends AbstractForm
 {
-
-    /**
-     * initialize
-     */
     public function initialize()
     {
         $this->_(

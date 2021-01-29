@@ -10,9 +10,6 @@ class PermissionUtils
 {
     protected static $aclMap;
 
-    /**
-     * @return array
-     */
     public static function getDefaults(): array
     {
         return [

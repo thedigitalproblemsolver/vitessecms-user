@@ -1,12 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace VitesseCms\User\Forms;
 
 use VitesseCms\Form\AbstractForm;
 
-/**
- * Class ForgotPasswordForm
- */
 class ForgotPasswordForm extends AbstractForm
 {
 

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace VitesseCms\User\Factories;
 
@@ -6,19 +6,8 @@ use VitesseCms\User\Models\PermissionRole;
 use VitesseCms\User\Models\User;
 use Phalcon\Di;
 
-/**
- * Class UserFactory
- */
 class UserFactory
 {
-    /**
-     * @param string $email
-     * @param string $calling_name
-     * @param bool $published
-     * @param string|null $password
-     *
-     * @return User
-     */
     public static function create(
         string $email,
         string $password = null,
@@ -52,9 +41,6 @@ class UserFactory
         return $user;
     }
 
-    /**
-     * @return User
-     */
     public static function createGuest(): User
     {
         $user = new User();
