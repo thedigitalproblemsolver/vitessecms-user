@@ -4,6 +4,7 @@ namespace VitesseCms\User;
 
 use VitesseCms\Content\Repositories\ItemRepository;
 use VitesseCms\Core\AbstractModule;
+use VitesseCms\User\Repositories\PermissionRoleRepository;
 use VitesseCms\User\Repositories\RepositoryCollection;
 use VitesseCms\User\Repositories\UserRepository;
 use Phalcon\DiInterface;
@@ -15,7 +16,8 @@ class Module extends AbstractModule
         parent::registerServices($di, 'User');
         $di->setShared('repositories', new RepositoryCollection(
             new UserRepository(),
-            new ItemRepository()
+            new ItemRepository(),
+            new PermissionRoleRepository()
         ));
     }
 }

@@ -8,82 +8,60 @@ use VitesseCms\Core\Utils\FileUtil;
 use VitesseCms\Core\Utils\SystemUtil;
 use VitesseCms\Database\AbstractCollection;
 use VitesseCms\Form\AbstractForm;
-use VitesseCms\User\Models\PermissionRole;
+use VitesseCms\User\Repositories\RepositoriesInterface;
 use VitesseCms\User\Utils\PermissionUtils;
-use Phalcon\Di;
 use Phalcon\Tag;
 
-class AdminpermissionsController extends AbstractAdminController
+class AdminpermissionsController extends AbstractAdminController implements RepositoriesInterface
 {
-    //TODO html naar mustache verplaatsen
     public function adminListAction(): void
     {
-        PermissionRole::setFindPublished(false);
-        PermissionRole::setFindValue('parentId', null);
-        PermissionRole::setFindValue('calling_name', ['$ne' => 'superadmin']);
-        $roles = PermissionRole::findAll();
-        $modules = SystemUtil::getModules(Di::getDefault()->get('configuration'));
+        $roles = $this->repositories->permissionRole->getAdminListRoles();
+        $modules = SystemUtil::getModules($this->configuration);
         $checks = [];
         if (is_file(PermissionUtils::getAccessFileName())) :
             $checks = PermissionUtils::getAccessFile();
         endif;
-
         $defaults = PermissionUtils::getDefaults();
 
-        $table = '<form 
-            action="admin/user/adminpermissions/save" 
-            autocomplete="off"
-            method="post"
-        >
-        <table class="table table-hover table-bordered" >
-        <tr>
-            <th>function</th>';
-
         $rolesList = [];
-        foreach ($roles as $key => $role) :
-            $table .= '<th>'.$role->_('name').'</th>';
+        $headers = ['function'];
+        while ($roles->valid()) :
+            $role = $roles->current();
+            $key = $roles->key();
+            $headers[] = $role->getNameField();
             $rolesList[] = $role;
-            if ($role->_('hasChildren')) :
-                unset($roles[$key]);
-                PermissionRole::setFindPublished(false);
-                PermissionRole::setFindValue('parentId', (string)$role->_('_id'));
-                PermissionRole::setFindValue('calling_name', ['$ne' => 'superadmin']);
-                $children = PermissionRole::findAll();
+            if ($role->hasChildren()) :
+                $children = $this->repositories->permissionRole->getAdminListChildren((string)$role->getId());
                 if ($children) :
                     foreach ($children as $child) :
                         $rolesList[] = $child;
-                        $table .= '<th>'.$child->_('name').' <small>child of '.$role->_('name').'</small></th>';
+                        $headers[] = $child->getNameField().' <small>child of '.$role->getNameField().'</small>';
                     endforeach;
                 endif;
             endif;
-        endforeach;
-        $table .= '</tr>';
-        $roles = $rolesList;
+            $roles->next();
+        endwhile;
 
+        $rows = ['modules' => []];
         foreach ($modules as $moduleName => $modulePath) :
             $controllers = DirectoryUtil::getFilelist($modulePath.'/controllers');
-            $table .= '<tr>
-                <th colspan="'.(\count($roles) + 1).'">'.$moduleName.'</th>
-            </tr>';
-            foreach ($controllers as $controllerPath => $controllerName) :
+            foreach ($controllers as $controllerPath => $controllerNameLong) :
                 $adminOnlyAccess = false;
-                if (substr_count($controllerName, 'Admin') > 0) :
+                if (substr_count($controllerNameLong, 'Admin') > 0) :
                     $adminOnlyAccess = true;
                 endif;
 
-                $table .= '<tr>
-                    <td colspan="'.(\count($roles) + 1).'">'.FileUtil::getName($controllerName).'</td>
-                </tr>';
                 $functions = FileUtil::getFunctions($controllerPath, $this->configuration);
+                $permissions = [];
                 foreach ($functions as $function) :
-                    $controllerName = str_replace('controller', '', strtolower(FileUtil::getName($controllerName)));
+                    $controllerName = str_replace('controller', '', strtolower(FileUtil::getName($controllerNameLong)));
                     $orgName = $function;
                     $function = strtolower(str_replace('Action', '', $function));
 
                     $fieldName = 'check['.$moduleName.']['.$controllerName.']['.$function.'][access][]';
-                    $table .= '<tr>
-                        <td>-&nbsp;'.$orgName.'</td>';
-                    foreach ($roles as $role) :
+                    $cells = [];
+                    foreach ($rolesList as $role) :
                         if (
                             $adminOnlyAccess === false
                             || (
@@ -126,7 +104,7 @@ class AdminpermissionsController extends AbstractAdminController
 
                             //check parent role
                             if ($role->_('parentId')) :
-                                $parentRole = PermissionRole::findById($role->_('parentId'));
+                                $parentRole = $this->repositories->permissionRole->getById($role->_('parentId'));
                                 if (
                                     isset($checks[$moduleName][$controllerName][$function]['access'])
                                     && \in_array(
@@ -155,25 +133,36 @@ class AdminpermissionsController extends AbstractAdminController
                             endif;
 
                             $element = Tag::checkField($parameters);
-                            $table .= '<td>'.$element.'</td>';
+                            $cells[] = $element;
                         else :
-                            $table .= '<td></td>';
+                            $cells[] = '';
                         endif;
                     endforeach;
-                    $table .= '</tr>';
+                    $permissions[] = $cells;
                 endforeach;
+                $rowsControllers = [
+                    'name' => FileUtil::getName($controllerNameLong),
+                    'permissions' => [
+                        'name' => $orgName,
+                        'cells' => $cells
+                    ]
+                ];
             endforeach;
+            $rows['modules'][] = [
+                'name' => $moduleName,
+                'controllers' => $rowsControllers
+            ];
         endforeach;
 
-        $table .= '<tr>
-            <td colspan="'.(\count($roles) + 1).'" >
-                <button 
-                    type="submit" 
-                    class="btn btn-success btn-block"
-                >%CORE_SAVE%</button>
-            </td>
-        </tr></table>
-        </form>';
+        $table = $this->view->renderTemplate(
+            'permissionsAdminListItem',
+            $this->configuration->getVendorNameDir().'user/src/resources/views/admin/',
+            [
+                'headers' => $headers,
+                'colspan' => count($rolesList) + 1,
+                'rows' => $rows
+            ]
+        );
 
         $this->view->setVar('content', $table);
         $this->prepareView();

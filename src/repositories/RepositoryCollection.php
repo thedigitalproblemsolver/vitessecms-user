@@ -17,11 +17,18 @@ class RepositoryCollection implements RepositoriesInterface
      */
     public $item;
 
+    /**
+     * @var PermissionRoleRepository
+     */
+    public $permissionRole;
+
     public function __construct(
         UserRepository $userRepository,
-        ItemRepository $itemRepository
+        ItemRepository $itemRepository,
+        PermissionRoleRepository $permissionRoleRepository
     ) {
         $this->user = $userRepository;
         $this->item = $itemRepository;
+        $this->permissionRole = $permissionRoleRepository;
     }
 }
