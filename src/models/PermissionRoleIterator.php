@@ -6,18 +6,13 @@ use VitesseCms\Database\AbstractCollection;
 
 class PermissionRoleIterator extends \ArrayIterator
 {
-    public function __construct(array $products)
+    public function __construct(array $permissionRoles)
     {
-        parent::__construct($products);
+        parent::__construct($permissionRoles);
     }
 
     public function current(): PermissionRole
     {
         return parent::current();
-    }
-
-    public function add(PermissionRole $value): void
-    {
-        $this->append($value);
     }
 }

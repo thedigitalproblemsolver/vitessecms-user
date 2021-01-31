@@ -10,7 +10,7 @@ use VitesseCms\Core\AbstractController;
 use VitesseCms\Core\Factories\ObjectFactory;
 use VitesseCms\Core\Helpers\Sef;
 use VitesseCms\User\Forms\LoginForm;
-use VitesseCms\User\Interfaces\RepositoriesInterface;
+use VitesseCms\User\Repositories\RepositoriesInterface;
 use VitesseCms\User\Models\User;
 
 class IndexController extends AbstractController implements RepositoriesInterface
@@ -19,24 +19,18 @@ class IndexController extends AbstractController implements RepositoriesInterfac
     {
         if ($this->user->isLoggedIn()) :
             $tabs = [];
-            BlockPosition::setFindValue('position', 'myaccount');
-            BlockPosition::addFindOrder('ordering');
-            $roles = [null, $this->user->_('role')];
-            BlockPosition::setFindValue('roles', ['$in' => $roles]);
-            foreach (BlockPosition::findAll() as $blockPosition) :
-                /** @var Block $tmpBlock */
-                $tmpBlock = Block::findById($blockPosition->_('block'));
+            $blockPositions = $this->repositories->blockPosition->getByMyAccountPosition($this->user->getPermissionRole());
+            while ($blockPositions->valid()) :
+                $blockPosition = $blockPositions->current();
+                $block = $this->repositories->block->getById($blockPosition->getBlock());
                 $tmp = [
-                    'id'      => $tmpBlock->getId(),
-                    'name'    => $tmpBlock->_('name'),
-                    'content' => BlockHelper::render(
-                        $tmpBlock,
-                        $this->view,
-                        $this->cache
-                    ),
+                    'id'      => $block->getId(),
+                    'name'    => $block->getNameField(),
+                    'content' => BlockHelper::render($block, $this->view, $this->cache)
                 ];
                 $tabs[] = $tmp;
-            endforeach;
+                $blockPositions->next();
+            endwhile;
 
             $block = ObjectFactory::create();
             $block->set('items', $tabs);
@@ -71,16 +65,14 @@ class IndexController extends AbstractController implements RepositoriesInterfac
                             User::class,
                             'Forced password reset for '.$user->_('email')
                         );
-                        $item = Item::findById($this->setting->get('USER_PAGE_PASSWORDFORCED'));
-                        $return = $this->url->getBaseUri().$item->_('slug');
+                        $item = $this->repositories->item->getById($this->setting->get('USER_PAGE_PASSWORDFORCED'));
+                        $return = $this->url->getBaseUri().$item->getSlug();
                         $hasErrors = false;
                     else :
                         $password = $this->request->getPost('password');
                         $return = 'user/index';
                         if ($this->security->checkHash($password, $user->_('password'))) :
-                            $this->session->set(
-                                'auth', ['id' => (string)$user->getId()]
-                            );
+                            $this->session->set('auth', ['id' => (string)$user->getId()]);
                             $this->eventsManager->fire('user:onLoginSuccess', $user);
                             $this->flash->setSucces('USER_LOGIN_SUCCESS');
                             $ajax = ['successFunction' => 'refresh()'];

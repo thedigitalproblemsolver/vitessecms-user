@@ -2,8 +2,10 @@
 
 namespace VitesseCms\User;
 
+use VitesseCms\Block\Repositories\BlockRepository;
 use VitesseCms\Content\Repositories\ItemRepository;
 use VitesseCms\Core\AbstractModule;
+use VitesseCms\User\Repositories\BlockPositionRepository;
 use VitesseCms\User\Repositories\PermissionRoleRepository;
 use VitesseCms\User\Repositories\RepositoryCollection;
 use VitesseCms\User\Repositories\UserRepository;
@@ -17,7 +19,9 @@ class Module extends AbstractModule
         $di->setShared('repositories', new RepositoryCollection(
             new UserRepository(),
             new ItemRepository(),
-            new PermissionRoleRepository()
+            new PermissionRoleRepository(),
+            new BlockPositionRepository(),
+            new BlockRepository()
         ));
     }
 }

@@ -4,10 +4,13 @@ namespace VitesseCms\User\Controllers;
 
 use VitesseCms\Admin\AbstractAdminController;
 use VitesseCms\Database\AbstractCollection;
+use VitesseCms\Database\Models\FindValue;
+use VitesseCms\Database\Models\FindValueIterator;
 use VitesseCms\User\Forms\UserForm;
+use VitesseCms\User\Repositories\RepositoriesInterface;
 use VitesseCms\User\Models\User;
 
-class AdminuserController extends AbstractAdminController
+class AdminuserController extends AbstractAdminController implements RepositoriesInterface
 {
     public function onConstruct()
     {
@@ -18,6 +21,7 @@ class AdminuserController extends AbstractAdminController
         $this->listOrder = 'email';
     }
 
+    //TODO move to listener
     public function beforeSave(AbstractCollection $item): void
     {
         if (
@@ -42,21 +46,17 @@ class AdminuserController extends AbstractAdminController
     public function searchEmailAction(): void
     {
         if ($this->request->isAjax()) :
-            User::setFindValue('email', $this->request->get('search'), 'like');
-            $users = User::findAll();
+            $users = $this->repositories->user->findAll(new FindValueIterator(
+                [new FindValue('email', $this->request->get('search'), 'like')]
+            ));
 
-            $result = [
-                'items' => []
-            ];
-            if($users) :
-                foreach ($users as $user ) :
-                    $tmp = [
-                        'id' => (string)$user->getId(),
-                        'name' => $user->_('email'),
-                    ];
-                    $result['items'][] = $tmp;
-                endforeach;
-            endif;
+            $result = ['items' => []];
+            while ($users->valid()) :
+                $user =$users->current();
+                $tmp = ['id' => (string)$user->getId(), 'name' => $user->getEmail()];
+                $result['items'][] = $tmp;
+                $users->next();
+            endwhile;
 
             $this->response->setContentType('application/json', 'UTF-8');
             echo json_encode($result);

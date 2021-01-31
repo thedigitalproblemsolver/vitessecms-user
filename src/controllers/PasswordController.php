@@ -10,7 +10,7 @@ use VitesseCms\User\Forms\ChangeForm;
 use VitesseCms\User\Forms\LoginForm;
 use VitesseCms\User\Forms\ForgotPasswordForm;
 use VitesseCms\User\Forms\ResetForm;
-use VitesseCms\User\Interfaces\RepositoriesInterface;
+use VitesseCms\User\Repositories\RepositoriesInterface;
 use VitesseCms\User\Models\User;
 
 class PasswordController extends AbstractController implements RepositoriesInterface
