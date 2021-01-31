@@ -3,33 +3,17 @@
 namespace VitesseCms\User\Forms;
 
 use VitesseCms\Form\AbstractForm;
+use VitesseCms\Form\Models\Attributes;
 
 class ChangeForm extends AbstractForm
 {
 
     public function initialize()
     {
-        $this->_(
-            'password',
-            '%USER_PASSWORD_OLD%',
-            'password_old',
-            ['required' => 'required']
-        );
-        $this->_(
-            'password',
-            '%USER_PASSWORD_NEW%',
-            'password',
-            ['required' => 'required']
-        );
-        $this->_(
-            'password',
-            '%USER_PASSWORD_REPEAT%',
-            'password2',
-            ['required' => 'required']
-        );
-        $this->_(
-            'submit',
-            '%USER_PASSWORD_CHANGE%'
-        );
+        $this->addPassword('%USER_PASSWORD_OLD%', 'password_old', (new Attributes())->setRequired())
+            ->addPassword('%USER_PASSWORD_NEW%', 'password', (new Attributes())->setRequired())
+            ->addPassword('%USER_PASSWORD_REPEAT%', 'password2', (new Attributes())->setRequired())
+            ->addSubmitButton('%USER_PASSWORD_CHANGE%')
+        ;
     }
 }

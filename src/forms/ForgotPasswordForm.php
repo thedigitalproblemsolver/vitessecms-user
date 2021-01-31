@@ -3,21 +3,15 @@
 namespace VitesseCms\User\Forms;
 
 use VitesseCms\Form\AbstractForm;
+use VitesseCms\Form\Models\Attributes;
 
 class ForgotPasswordForm extends AbstractForm
 {
 
     public function initialize()
     {
-        $this->_(
-            'email',
-            '%CORE_EMAIL%',
-            'email',
-            ['required' => 'required']
-        );
-        $this->_(
-            'submit',
-            '%USER_PASSWORD_FORGOT_REQUEST_SEND_EMAIL%'
-        );
+        $this->addEmail('%CORE_EMAIL%', 'email', (new Attributes())->setRequired())
+            ->addSubmitButton('%USER_PASSWORD_FORGOT_REQUEST_SEND_EMAIL%')
+        ;
     }
 }

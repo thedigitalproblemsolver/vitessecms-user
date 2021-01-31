@@ -2,6 +2,7 @@
 
 namespace VitesseCms\User\Factories;
 
+use VitesseCms\User\Enums\UserRoleEnum;
 use VitesseCms\User\Models\PermissionRole;
 use VitesseCms\User\Models\User;
 use Phalcon\Di;
@@ -10,21 +11,20 @@ class UserFactory
 {
     public static function create(
         string $email,
-        string $password = null,
-        string $calling_name = 'registered',
+        string $password,
+        string $permissionRoleId,
         bool $published = false
     ) : User
     {
         $user = new User();
         $user->set('email', $email);
-        $user->set('published', $published);
-        if($password) :
-            $user->set('password', Di::getDefault()->get('security')->hash($password));
-        endif;
-        $user->set('published', $published);
+        $user->setPublished($published);
+        //if($password) :
+            //$user->set('password', Di::getDefault()->get('security')->hash($password));
+        //endif;
 
         PermissionRole::setFindValue('calling_name', $calling_name);
-        $user->set('role', (string)PermissionRole::findFirst()->getId());
+        $user->setRole((string)PermissionRole::findFirst()->getId());
 
         /*if( is_object($bindData)) :
             Datagroup::setFindPublished(false);
@@ -44,7 +44,7 @@ class UserFactory
     public static function createGuest(): User
     {
         $user = new User();
-        $user->set('role', 'guest');
+        $user->setRole(UserRoleEnum::GUEST);
 
         return $user;
     }

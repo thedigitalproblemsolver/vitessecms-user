@@ -34,6 +34,11 @@ class User extends AbstractCollection
      */
     public $email;
 
+    /**
+    * @var string
+     */
+    public $role;
+
     public function afterFetch()
     {
         $this->set('name', $this->_('email'));
@@ -166,6 +171,13 @@ class User extends AbstractCollection
     public function setPassword(string $password): User
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    public function setRole(string $role): User
+    {
+        $this->role = $role;
 
         return $this;
     }

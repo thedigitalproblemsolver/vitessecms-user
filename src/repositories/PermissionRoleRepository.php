@@ -22,6 +22,22 @@ class PermissionRoleRepository
         return null;
     }
 
+    public function findFirst(
+        ?FindValueIterator $findValues = null,
+        bool $hideUnpublished = true
+    ): ?PermissionRole {
+        PermissionRole::setFindPublished($hideUnpublished);
+        $this->parsefindValues($findValues);
+
+        /** @var PermissionRole $item */
+        $item = PermissionRole::findFirst();
+        if (is_object($item)):
+            return $item;
+        endif;
+
+        return null;
+    }
+
     public function getAdminListRoles(): ?PermissionRoleIterator
     {
         return $this->findAll(new FindValueIterator([

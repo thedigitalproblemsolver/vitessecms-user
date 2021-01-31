@@ -4,58 +4,45 @@ namespace VitesseCms\User\Forms;
 
 use VitesseCms\Core\Models\Datagroup;
 use VitesseCms\Form\AbstractForm;
+use VitesseCms\Form\AbstractFormWithRepository;
+use VitesseCms\Form\Helpers\ElementHelper;
+use VitesseCms\Form\Interfaces\FormWithRepositoryInterface;
+use VitesseCms\Form\Models\Attributes;
+use VitesseCms\User\Enums\UserRoleEnum;
 use VitesseCms\User\Models\PermissionRole;
+use VitesseCms\User\Repositories\RepositoryCollection;
 
-class UserForm extends AbstractForm
+class UserForm extends AbstractFormWithRepository
 {
-    public function initialize()
-    {
-        $this->_(
-            'email',
-            '%CORE_EMAIL%',
-            'email',
-            ['required' => 'required']
-        );
-        $this->_(
-            'select',
-            '%ADMIN_ROLE%',
-            'role',
-            [
-                'required' => 'required',
-                'options'  => PermissionRole::class,
-            ]
-        );
-        $this->_(
-            'checkbox',
-            '%USER_PASSWORD_FORCED_RESET%',
-            'forcePasswordReset'
-        );
+    /**
+     * @var RepositoryCollection
+     */
+    protected $repositories;
 
-        if ($this->getDI()->get('user')->getPermissionRole() === 'superadmin') :
-            $this->_(
-                'password',
-                '%USER_PASSWORD%',
-                'new_password'
-            );
+    public function buildForm(): FormWithRepositoryInterface
+    {
+        $this->addEmail('%CORE_EMAIL%', 'email',(new Attributes())->setRequired())
+            ->addDropdown(
+                '%ADMIN_ROLE%',
+                'role',
+                (new Attributes())->setRequired()
+                    ->setOptions(
+                        ElementHelper::modelIteratorToOptions($this->repositories->permissionRole->findAll())
+                    )
+        )->addToggle('%USER_PASSWORD_FORCED_RESET%', 'forcePasswordReset');
+
+        if ($this->user->getPermissionRole() === UserRoleEnum::SUPER_ADMIN) :
+            $this->addPassword('%USER_PASSWORD%', 'new_password');
         endif;
 
         if ($this->setting->has('USER_DATAGROUP_PERSONALINFORMATION')) :
-            /** @var Datagroup $datagroup */
-            $datagroup = Datagroup::findById($this->setting->get('USER_DATAGROUP_PERSONALINFORMATION'));
-            $this->_(
-                'html',
-                'html',
-                'datagrouptitle',
-                [
-                    'html' => '<br /><h2>'.$datagroup->_('name').'</h2>',
-                ]
-            );
+            $datagroup = $this->repositories->datagroup->getById($this->setting->get('USER_DATAGROUP_PERSONALINFORMATION'));
+            $this->addHtml('<br /><h2>'.$datagroup->getNameField().'</h2>');
             $datagroup->buildItemForm($this);
         endif;
 
-        $this->_(
-            'submit',
-            '%CORE_SAVE%'
-        );
+        $this->addSubmitButton('%CORE_SAVE%');
+
+        return $this;
     }
 }

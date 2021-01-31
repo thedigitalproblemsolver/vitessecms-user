@@ -3,34 +3,16 @@
 namespace VitesseCms\User\Forms;
 
 use VitesseCms\Form\AbstractForm;
+use VitesseCms\Form\Models\Attributes;
 
 class PermissionRoleForm extends AbstractForm
 {
     public function initialize()
     {
-        $this->_(
-            'text',
-            '%CORE_NAME%',
-            'name',
-            [
-                'required' => 'required',
-                'multilang' => true
-            ]
-        );
-        $this->_(
-            'text',
-            '%ADMIN_CALLING_NAME%',
-            'calling_name',
-            ['required' => 'required']
-        );
-        $this->_(
-            'checkbox',
-            '%ADMIN_ADMINISTRATOR_RIGHTS%',
-            'adminAccess'
-        );
-        $this->_(
-            'submit',
-            '%CORE_SAVE%'
-        );
+        $this->addText('%CORE_NAME%', 'name', (new Attributes())->setRequired()->setMultilang())
+            ->addText('%ADMIN_CALLING_NAME%', 'calling_name', ( new Attributes())->setRequired())
+            ->addToggle('%ADMIN_ADMINISTRATOR_RIGHTS%', 'adminAccess')
+            ->addSubmitButton('%CORE_SAVE%')
+        ;
     }
 }

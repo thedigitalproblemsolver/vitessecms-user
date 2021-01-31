@@ -4,6 +4,7 @@ namespace VitesseCms\User\Repositories;
 
 use VitesseCms\Block\Repositories\BlockRepository;
 use VitesseCms\Content\Repositories\ItemRepository;
+use VitesseCms\Core\Repositories\DatagroupRepository;
 
 /**
  * @property ItemRepository $item
@@ -11,6 +12,7 @@ use VitesseCms\Content\Repositories\ItemRepository;
  * @property PermissionRoleRepository $permissionRole
  * @property BlockPositionRepository $blockPosition
  * @property BlockRepository $block
+ * @property DatagroupRepository $datagroup
  */
 interface RepositoryInterface
 {

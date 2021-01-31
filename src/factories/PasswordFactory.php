@@ -9,6 +9,7 @@ use Phalcon\Security\Random;
 
 class PasswordFactory
 {
+    //TODO crete own model for PassWord reset
     public static function createReset(): BaseObjectInterface
     {
         $item = ObjectFactory::create();

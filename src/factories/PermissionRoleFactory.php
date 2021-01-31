@@ -16,10 +16,10 @@ class PermissionRoleFactory
     {
         $permission = new PermissionRole();
         $permission->set('name', $name,true);
-        $permission->set('calling_name', $calling_name);
-        $permission->set('published', $published);
-        $permission->set('adminAccess', $adminAccess);
-        $permission->set('parentId', $parentId);
+        $permission->setCallingName('calling_name', $calling_name);
+        $permission->setPublished($published);
+        $permission->setAdminAccess( $adminAccess);
+        $permission->setParent('parentId');
 
         return $permission;
     }
