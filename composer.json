@@ -19,6 +19,6 @@
   },
   "require": {
     "vitessecms/content": "~0.0.7",
-    "vitessecms/block": "~0.0.7"
+    "vitessecms/block": "~0.0.8"
   }
 }
