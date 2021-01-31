@@ -1,0 +1,24 @@
+{
+  "name": "vitessecms/user",
+  "type": "library",
+  "description": "User module for VitesseCms",
+  "keywords": ["php","phalcon","vitessecms"],
+  "homepage": "https://github.com/thedigitalproblemsolver/VitesseCMS",
+  "license": "GPL-2.0-or-later",
+  "version": "0.0.1",
+  "authors": [
+    {
+      "name": "Jasper Jaklofsky",
+      "email": "info@thedigitalproblemsolver.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "VitesseCms\\User\\": "src/"
+    }
+  },
+  "require": {
+    "vitessecms/content": "~0.0.7",
+    "vitessecms/block": "~0.0.7"
+  }
+}
