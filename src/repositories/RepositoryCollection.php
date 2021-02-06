@@ -5,7 +5,7 @@ namespace VitesseCms\User\Repositories;
 use VitesseCms\Block\Models\BlockPosition;
 use VitesseCms\Block\Repositories\BlockRepository;
 use VitesseCms\Content\Repositories\ItemRepository;
-use VitesseCms\Core\Repositories\DatagroupRepository;
+use VitesseCms\Datagroup\Repositories\DatagroupRepository;
 use VitesseCms\Database\Interfaces\BaseRepositoriesInterface;
 use VitesseCms\User\Repositories\RepositoriesInterface;
 
