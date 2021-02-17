@@ -13,14 +13,14 @@
                     <tr colspan="{{colspan}}">
                         <th>{{{name}}}</th>
                     </tr>
-                    <tr>
-                    {{#permissions}}
-                        <td>-&nbsp;{{{name}}}</td>
-                        {{#cells}}
-                            <td>{{{.}}}</td>
-                        {{/cells}}
-                    {{/permissions}}
-                    </tr>
+                    {{#functions}}
+                        <tr>
+                            <td>-&nbsp;{{{name}}}</td>
+                            {{#cells}}
+                                <td>{{{.}}}</td>
+                            {{/cells}}
+                        </tr>
+                    {{/functions}}
                 {{/controllers}}
         {{/rows.modules}}
         <tr>

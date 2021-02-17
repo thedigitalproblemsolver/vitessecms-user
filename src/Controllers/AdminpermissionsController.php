@@ -45,7 +45,7 @@ class AdminpermissionsController extends AbstractAdminController implements Repo
 
         $rows = ['modules' => []];
         foreach ($modules as $moduleName => $modulePath) :
-            $controllers = DirectoryUtil::getFilelist($modulePath.'/controllers');
+            $controllers = DirectoryUtil::getFilelist($modulePath.'/Controllers');
             foreach ($controllers as $controllerPath => $controllerNameLong) :
                 $adminOnlyAccess = false;
                 if (substr_count($controllerNameLong, 'Admin') > 0) :
@@ -138,25 +138,27 @@ class AdminpermissionsController extends AbstractAdminController implements Repo
                             $cells[] = '';
                         endif;
                     endforeach;
-                    $permissions[] = $cells;
+                    $permissions[] = [
+                        'name' => $orgName,
+                        'cells' => $cells
+                    ];
                 endforeach;
                 $rowsControllers = [
                     'name' => FileUtil::getName($controllerNameLong),
-                    'permissions' => [
-                        'name' => $orgName,
-                        'cells' => $cells
-                    ]
+                    'functions' => $permissions
                 ];
             endforeach;
-            $rows['modules'][] = [
-                'name' => $moduleName,
-                'controllers' => $rowsControllers
-            ];
+            if(isset($rowsControllers) && is_array($rowsControllers)):
+                $rows['modules'][] = [
+                    'name' => $moduleName,
+                    'controllers' => $rowsControllers
+                ];
+                $rowsControllers = null;
+            endif;
         endforeach;
-
         $table = $this->view->renderTemplate(
             'permissionsAdminListItem',
-            $this->configuration->getVendorNameDir().'user/src/resources/views/admin/',
+            $this->configuration->getVendorNameDir().'user/src/Resources/views/admin/',
             [
                 'headers' => $headers,
                 'colspan' => count($rolesList) + 1,
