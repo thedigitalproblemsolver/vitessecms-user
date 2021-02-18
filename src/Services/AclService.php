@@ -28,7 +28,7 @@ class AclService
     {
         return PermissionUtils::check(
             $this->user,
-            $this->router->getModulePrefix().$this->router->getModuleName(),
+            $this->router->getModulePrefix() . $this->router->getModuleName(),
             $this->router->getControllerName(),
             $function
         );

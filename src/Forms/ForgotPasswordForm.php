@@ -11,7 +11,6 @@ class ForgotPasswordForm extends AbstractForm
     public function initialize()
     {
         $this->addEmail('%CORE_EMAIL%', 'email', (new Attributes())->setRequired())
-            ->addSubmitButton('%USER_PASSWORD_FORGOT_REQUEST_SEND_EMAIL%')
-        ;
+            ->addSubmitButton('%USER_PASSWORD_FORGOT_REQUEST_SEND_EMAIL%');
     }
 }

@@ -25,7 +25,8 @@ class PermissionRoleRepository
     public function findFirst(
         ?FindValueIterator $findValues = null,
         bool $hideUnpublished = true
-    ): ?PermissionRole {
+    ): ?PermissionRole
+    {
         PermissionRole::setFindPublished($hideUnpublished);
         $this->parsefindValues($findValues);
 
@@ -36,43 +37,6 @@ class PermissionRoleRepository
         endif;
 
         return null;
-    }
-
-    public function getAdminListRoles(): ?PermissionRoleIterator
-    {
-        return $this->findAll(new FindValueIterator([
-                new FindValue('parentId', null),
-                new FindValue('calling_name', ['$ne' => 'superadmin'])
-            ]),
-            false
-        );
-    }
-
-    public function getAdminListChildren(string $parentid): ?PermissionRoleIterator
-    {
-        return $this->findAll(new FindValueIterator([
-            new FindValue('parentId', $parentid),
-            new FindValue('calling_name', ['$ne' => 'superadmin'])
-        ]),
-            false
-        );
-    }
-
-    public function findAll(
-        ?FindValueIterator $findValues = null,
-        bool $hideUnpublished = true,
-        ?int $limit = null,
-        ?FindOrderIterator $findOrders = null
-    ): PermissionRoleIterator {
-        PermissionRole::setFindPublished($hideUnpublished);
-        PermissionRole::addFindOrder('name');
-        if($limit !== null) :
-            PermissionRole::setFindLimit($limit);
-        endif;
-        $this->parseFindValues($findValues);
-        $this->parseFindOrders($findOrders);
-
-        return new PermissionRoleIterator(PermissionRole::findAll());
     }
 
     protected function parseFindValues(?FindValueIterator $findValues = null): void
@@ -90,6 +54,34 @@ class PermissionRoleRepository
         endif;
     }
 
+    public function getAdminListRoles(): ?PermissionRoleIterator
+    {
+        return $this->findAll(new FindValueIterator([
+            new FindValue('parentId', null),
+            new FindValue('calling_name', ['$ne' => 'superadmin'])
+        ]),
+            false
+        );
+    }
+
+    public function findAll(
+        ?FindValueIterator $findValues = null,
+        bool $hideUnpublished = true,
+        ?int $limit = null,
+        ?FindOrderIterator $findOrders = null
+    ): PermissionRoleIterator
+    {
+        PermissionRole::setFindPublished($hideUnpublished);
+        PermissionRole::addFindOrder('name');
+        if ($limit !== null) :
+            PermissionRole::setFindLimit($limit);
+        endif;
+        $this->parseFindValues($findValues);
+        $this->parseFindOrders($findOrders);
+
+        return new PermissionRoleIterator(PermissionRole::findAll());
+    }
+
     protected function parseFindOrders(?FindOrderIterator $findOrders = null): void
     {
         if ($findOrders !== null) :
@@ -102,5 +94,15 @@ class PermissionRoleRepository
                 $findOrders->next();
             endwhile;
         endif;
+    }
+
+    public function getAdminListChildren(string $parentid): ?PermissionRoleIterator
+    {
+        return $this->findAll(new FindValueIterator([
+            new FindValue('parentId', $parentid),
+            new FindValue('calling_name', ['$ne' => 'superadmin'])
+        ]),
+            false
+        );
     }
 }

@@ -21,7 +21,7 @@ class UserForm extends AbstractFormWithRepository
 
     public function buildForm(): FormWithRepositoryInterface
     {
-        $this->addEmail('%CORE_EMAIL%', 'email',(new Attributes())->setRequired())
+        $this->addEmail('%CORE_EMAIL%', 'email', (new Attributes())->setRequired())
             ->addDropdown(
                 '%ADMIN_ROLE%',
                 'role',
@@ -29,7 +29,7 @@ class UserForm extends AbstractFormWithRepository
                     ->setOptions(
                         ElementHelper::modelIteratorToOptions($this->repositories->permissionRole->findAll())
                     )
-        )->addToggle('%USER_PASSWORD_FORCED_RESET%', 'forcePasswordReset');
+            )->addToggle('%USER_PASSWORD_FORCED_RESET%', 'forcePasswordReset');
 
         if ($this->user->getPermissionRole() === UserRoleEnum::SUPER_ADMIN) :
             $this->addPassword('%USER_PASSWORD%', 'new_password');
@@ -37,7 +37,7 @@ class UserForm extends AbstractFormWithRepository
 
         if ($this->setting->has('USER_DATAGROUP_PERSONALINFORMATION')) :
             $datagroup = $this->repositories->datagroup->getById($this->setting->get('USER_DATAGROUP_PERSONALINFORMATION'));
-            $this->addHtml('<br /><h2>'.$datagroup->getNameField().'</h2>');
+            $this->addHtml('<br /><h2>' . $datagroup->getNameField() . '</h2>');
             $datagroup->buildItemForm($this);
         endif;
 

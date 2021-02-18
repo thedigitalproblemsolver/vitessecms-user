@@ -12,13 +12,13 @@ class PermissionRoleFactory
         bool $published = false,
         bool $adminAccess = false,
         string $parentId = null
-    ) : PermissionRole
+    ): PermissionRole
     {
         $permission = new PermissionRole();
-        $permission->set('name', $name,true);
+        $permission->set('name', $name, true);
         $permission->setCallingName('calling_name', $calling_name);
         $permission->setPublished($published);
-        $permission->setAdminAccess( $adminAccess);
+        $permission->setAdminAccess($adminAccess);
         $permission->setParent('parentId');
 
         return $permission;

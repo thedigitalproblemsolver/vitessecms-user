@@ -13,9 +13,9 @@ class PermissionUtils
     public static function getDefaults(): array
     {
         return [
-            'block'         => [
+            'block' => [
                 'index' => [
-                    'render'     => [
+                    'render' => [
                         'access' => '*',
                     ],
                     'renderhtml' => [
@@ -23,22 +23,22 @@ class PermissionUtils
                     ],
                 ],
             ],
-            'content'       => [
+            'content' => [
                 'index' => [
                     'index' => [
                         'access' => '*',
                     ],
                 ],
             ],
-            'core'          => [
+            'core' => [
                 'index' => [
                     'index' => [
                         'access' => '*',
                     ],
                 ],
             ],
-            'export'        => [
-                'index'   => [
+            'export' => [
+                'index' => [
                     'index' => [
                         'access' => '*',
                     ],
@@ -49,14 +49,14 @@ class PermissionUtils
                     ],
                 ],
             ],
-            'form'          => [
+            'form' => [
                 'index' => [
                     'submit' => [
                         'access' => '*',
                     ],
                 ],
             ],
-            'mustache'      => [
+            'mustache' => [
                 'index' => [
                     'gettemplate' => [
                         'access' => '*',
@@ -64,8 +64,8 @@ class PermissionUtils
                 ],
             ],
             'communication' => [
-                'newsletterlist'  => [
-                    'addmember'   => [
+                'newsletterlist' => [
+                    'addmember' => [
                         'access' => '*',
                     ],
                     'unsubscribe' => [
@@ -74,7 +74,7 @@ class PermissionUtils
                             'admin',
                         ],
                     ],
-                    'subscribe'   => [
+                    'subscribe' => [
                         'access' => [
                             'registered',
                             'admin',
@@ -85,26 +85,26 @@ class PermissionUtils
                     'unsubscribe' => [
                         'access' => '*',
                     ],
-                    'opened'      => [
+                    'opened' => [
                         'access' => '*',
                     ],
                 ],
             ],
-            'shop'          => [
-                'cart'     => [
-                    'index'                => [
+            'shop' => [
+                'cart' => [
+                    'index' => [
                         'access' => '*',
                     ],
-                    'addtocart'            => [
+                    'addtocart' => [
                         'access' => '*',
                     ],
-                    'getcarttext'          => [
+                    'getcarttext' => [
                         'access' => '*',
                     ],
-                    'removeitem'           => [
+                    'removeitem' => [
                         'access' => '*',
                     ],
-                    'changequantity'       => [
+                    'changequantity' => [
                         'access' => '*',
                     ],
                     'setpackingforproduct' => [
@@ -112,7 +112,7 @@ class PermissionUtils
                     ],
                 ],
                 'checkout' => [
-                    'register'         => [
+                    'register' => [
                         'access' => [
                             'guest',
                         ],
@@ -129,14 +129,14 @@ class PermissionUtils
                         'access' => '*',
                     ],
                 ],
-                'order'    => [
-                    'saveandpay'        => [
+                'order' => [
+                    'saveandpay' => [
                         'access' => [
                             'registered',
                             'admin',
                         ],
                     ],
-                    'vieworder'         => [
+                    'vieworder' => [
                         'access' => [
                             'registered',
                             'admin',
@@ -146,25 +146,25 @@ class PermissionUtils
                         'access' => '*',
                     ],
                 ],
-                'payment'  => [
-                    'process'  => [
+                'payment' => [
+                    'process' => [
                         'access' => '*',
                     ],
-                    'cancel'   => [
+                    'cancel' => [
                         'access' => '*',
                     ],
                     'redirect' => [
                         'access' => '*',
                     ],
                 ],
-                'shopper'  => [
-                    'edit'        => [
+                'shopper' => [
+                    'edit' => [
                         'access' => [
                             'registered',
                             'admin',
                         ],
                     ],
-                    'save'        => [
+                    'save' => [
                         'access' => [
                             'registered',
                             'admin',
@@ -176,13 +176,13 @@ class PermissionUtils
                             'admin',
                         ],
                     ],
-                    'editshipto'  => [
+                    'editshipto' => [
                         'access' => [
                             'registered',
                             'admin',
                         ],
                     ],
-                    'saveshipto'  => [
+                    'saveshipto' => [
                         'access' => [
                             'registered',
                             'admin',
@@ -190,9 +190,9 @@ class PermissionUtils
                     ],
                 ],
             ],
-            'user'          => [
-                'index'    => [
-                    'index'     => [
+            'user' => [
+                'index' => [
+                    'index' => [
                         'access' => [
                             'registered',
                             'admin',
@@ -203,28 +203,28 @@ class PermissionUtils
                             '*',
                         ],
                     ],
-                    'login'     => [
+                    'login' => [
                         'access' => [
                             '*',
                         ],
                     ],
-                    'logout'    => [
+                    'logout' => [
                         'access' => '*',
                     ],
                 ],
                 'password' => [
-                    'changeform'      => [
+                    'changeform' => [
                         'access' => [
                             'registered',
                             'admin',
                         ],
                     ],
-                    'forgotform'      => [
+                    'forgotform' => [
                         'access' => [
                             'guest',
                         ],
                     ],
-                    'resetform'       => [
+                    'resetform' => [
                         'access' => [
                             'guest',
                         ],
@@ -234,7 +234,7 @@ class PermissionUtils
                             'guest',
                         ],
                     ],
-                    'parseresetform'  => [
+                    'parseresetform' => [
                         'access' => [
                             'guest',
                         ],
@@ -249,7 +249,8 @@ class PermissionUtils
         string $module,
         string $controller,
         string $action
-    ): bool {
+    ): bool
+    {
         $module = strtolower($module);
         $controller = strtolower($controller);
         $action = strtolower($action);
@@ -279,15 +280,6 @@ class PermissionUtils
             && in_array($user->getPermissionRole(), self::$aclMap[$module][$controller][$action]['access'], true);
     }
 
-    public static function getAccessFileName(): string
-    {
-        if (DebugUtil::isDocker($_SERVER['SERVER_ADDR'])) :
-            return Di::getDefault()->get('config')->get('accountDir').'.access_dev.dat';
-        endif;
-
-        return Di::getDefault()->get('config')->get('accountDir').'.access.dat';
-    }
-
     public static function getAccessFile(): array
     {
         return unserialize(
@@ -299,5 +291,14 @@ class PermissionUtils
             ),
             []
         );
+    }
+
+    public static function getAccessFileName(): string
+    {
+        if (DebugUtil::isDocker($_SERVER['SERVER_ADDR'])) :
+            return Di::getDefault()->get('config')->get('accountDir') . '.access_dev.dat';
+        endif;
+
+        return Di::getDefault()->get('config')->get('accountDir') . '.access.dat';
     }
 }

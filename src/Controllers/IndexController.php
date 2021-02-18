@@ -24,8 +24,8 @@ class IndexController extends AbstractController implements RepositoriesInterfac
                 $blockPosition = $blockPositions->current();
                 $block = $this->repositories->block->getById($blockPosition->getBlock());
                 $tmp = [
-                    'id'      => $block->getId(),
-                    'name'    => $block->getNameField(),
+                    'id' => $block->getId(),
+                    'name' => $block->getNameField(),
                     'content' => BlockHelper::render($block, $this->view, $this->cache)
                 ];
                 $tabs[] = $tmp;
@@ -53,7 +53,7 @@ class IndexController extends AbstractController implements RepositoriesInterfac
         $return = null;
 
         if ($this->user->isLoggedIn()) :
-            $this->redirect('user/index',[],true,true);
+            $this->redirect('user/index', [], true, true);
         else :
             $loginForm = new LoginForm();
             if ($loginForm->validate($this)) :
@@ -63,10 +63,10 @@ class IndexController extends AbstractController implements RepositoriesInterfac
                         $this->log->write(
                             $user->getId(),
                             User::class,
-                            'Forced password reset for '.$user->_('email')
+                            'Forced password reset for ' . $user->_('email')
                         );
                         $item = $this->repositories->item->getById($this->setting->get('USER_PAGE_PASSWORDFORCED'));
-                        $return = $this->url->getBaseUri().$item->getSlug();
+                        $return = $this->url->getBaseUri() . $item->getSlug();
                         $hasErrors = false;
                     else :
                         $password = $this->request->getPost('password');
@@ -88,7 +88,7 @@ class IndexController extends AbstractController implements RepositoriesInterfac
                 $this->flash->setError('USER_LOGIN_FAILED', 'error');
             endif;
 
-            $this->redirect($return, $ajax,true,true);
+            $this->redirect($return, $ajax, true, true);
         endif;
     }
 
@@ -103,7 +103,7 @@ class IndexController extends AbstractController implements RepositoriesInterfac
     public function loginformAction(): void
     {
         if ($this->user->isLoggedIn()) :
-            $this->redirect('user/index',[],true,true);
+            $this->redirect('user/index', [], true, true);
         else :
             $this->view->set('content', (new LoginForm())->renderForm('user/login', 'login'));
         endif;

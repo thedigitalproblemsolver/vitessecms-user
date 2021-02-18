@@ -9,10 +9,9 @@ class ResetForm extends AbstractForm
 {
     public function initialize()
     {
-        $this->addPassword('%USER_PASSWORD_NEW%', 'password',(new Attributes())->setRequired())
-            ->addPassword('%USER_PASSWORD_REPEAT%', 'password2',(new Attributes())->setRequired())
+        $this->addPassword('%USER_PASSWORD_NEW%', 'password', (new Attributes())->setRequired())
+            ->addPassword('%USER_PASSWORD_REPEAT%', 'password2', (new Attributes())->setRequired())
             ->addHidden('passwordResetToken')
-            ->addSubmitButton('%USER_PASSWORD_CHANGE_MINE%')
-        ;
+            ->addSubmitButton('%USER_PASSWORD_CHANGE_MINE%');
     }
 }

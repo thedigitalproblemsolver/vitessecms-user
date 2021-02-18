@@ -48,7 +48,8 @@ class RepositoryCollection implements RepositoriesInterface, BaseRepositoriesInt
         BlockPositionRepository $blockPositionRepository,
         BlockRepository $blockRepository,
         DatagroupRepository $datagroupRepository
-    ) {
+    )
+    {
         $this->user = $userRepository;
         $this->item = $itemRepository;
         $this->permissionRole = $permissionRoleRepository;

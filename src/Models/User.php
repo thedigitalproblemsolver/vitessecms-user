@@ -10,34 +10,29 @@ use VitesseCms\Core\Models\Datagroup;
 class User extends AbstractCollection
 {
     /**
+     * @var string
+     */
+    public $email;
+    /**
+     * @var string
+     */
+    public $role;
+    /**
      * @var null
      */
     protected $permissionRole;
-
     /**
      * @var bool
      */
     protected $forcePasswordReset;
-
     /**
      * @var bool
      */
     protected $passwordReset;
-
     /**
      * @var string
      */
     protected $password;
-
-    /**
-     * @var string
-     */
-    public $email;
-
-    /**
-    * @var string
-     */
-    public $role;
 
     public function afterFetch()
     {
@@ -68,19 +63,6 @@ class User extends AbstractCollection
         return false;
     }
 
-    public function getPermissionRole(): string
-    {
-        if ($this->getId()) :
-            if ($this->permissionRole === null) :
-                $this->permissionRole = PermissionRole::findById($this->_('role'));
-            endif;
-
-            return $this->permissionRole->_('calling_name');
-        endif;
-
-        return 'guest';
-    }
-
     public function hasAdminAccess(): bool
     {
         if ($this->getId()) :
@@ -97,6 +79,19 @@ class User extends AbstractCollection
         endif;
 
         return false;
+    }
+
+    public function getPermissionRole(): string
+    {
+        if ($this->getId()) :
+            if ($this->permissionRole === null) :
+                $this->permissionRole = PermissionRole::findById($this->_('role'));
+            endif;
+
+            return $this->permissionRole->_('calling_name');
+        endif;
+
+        return 'guest';
     }
 
     public function createLogin(string $email, string $password, string $role = null): User
@@ -127,7 +122,7 @@ class User extends AbstractCollection
                 /** @var Datafield $datafield */
                 $datafield = Datafield::findById($datafieldObject['id']);
                 if (is_object($datafield)) :
-                    $static = 'VitesseCms\\Field\Models\\'.$datafield->_('type');
+                    $static = 'VitesseCms\\Field\Models\\' . $datafield->_('type');
                     /** @var AbstractField $static */
                     $static::beforeSave($this, $datafield);
                 endif;

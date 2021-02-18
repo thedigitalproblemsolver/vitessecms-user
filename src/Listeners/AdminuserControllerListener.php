@@ -13,13 +13,14 @@ use VitesseCms\User\Models\User;
 
 class AdminuserControllerListener
 {
-    public function beforeModelSave(Event $event, AdminuserController $controller, User $user): void {
+    public function beforeModelSave(Event $event, AdminuserController $controller, User $user): void
+    {
         if (
             $controller->request->getPost('new_password')
             && !empty($this->$controller->getPost('new_password'))
             && $controller->user->getPermissionRole() === 'superadmin'
         ) :
-            $item->set('password',$controller->security->hash(
+            $item->set('password', $controller->security->hash(
                 $controller->request->getPost('new_password'))
             );
         endif;

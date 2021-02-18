@@ -19,7 +19,7 @@ class BlockPositionRepository extends \VitesseCms\Block\Repositories\BlockPositi
             ]),
             true,
             null,
-            new FindOrderIterator([new FindOrder('ordering',1)])
+            new FindOrderIterator([new FindOrder('ordering', 1)])
         );
     }
 }

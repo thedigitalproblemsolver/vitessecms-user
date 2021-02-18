@@ -36,7 +36,7 @@ class AdminpermissionsController extends AbstractAdminController implements Repo
                 if ($children) :
                     foreach ($children as $child) :
                         $rolesList[] = $child;
-                        $headers[] = $child->getNameField().' <small>child of '.$role->getNameField().'</small>';
+                        $headers[] = $child->getNameField() . ' <small>child of ' . $role->getNameField() . '</small>';
                     endforeach;
                 endif;
             endif;
@@ -45,7 +45,7 @@ class AdminpermissionsController extends AbstractAdminController implements Repo
 
         $rows = ['modules' => []];
         foreach ($modules as $moduleName => $modulePath) :
-            $controllers = DirectoryUtil::getFilelist($modulePath.'/Controllers');
+            $controllers = DirectoryUtil::getFilelist($modulePath . '/Controllers');
             foreach ($controllers as $controllerPath => $controllerNameLong) :
                 $adminOnlyAccess = false;
                 if (substr_count($controllerNameLong, 'Admin') > 0) :
@@ -59,7 +59,7 @@ class AdminpermissionsController extends AbstractAdminController implements Repo
                     $orgName = $function;
                     $function = strtolower(str_replace('Action', '', $function));
 
-                    $fieldName = 'check['.$moduleName.']['.$controllerName.']['.$function.'][access][]';
+                    $fieldName = 'check[' . $moduleName . '][' . $controllerName . '][' . $function . '][access][]';
                     $cells = [];
                     foreach ($rolesList as $role) :
                         if (
@@ -148,7 +148,7 @@ class AdminpermissionsController extends AbstractAdminController implements Repo
                     'functions' => $permissions
                 ];
             endforeach;
-            if(isset($rowsControllers) && is_array($rowsControllers)):
+            if (isset($rowsControllers) && is_array($rowsControllers)):
                 $rows['modules'][] = [
                     'name' => $moduleName,
                     'controllers' => $rowsControllers
@@ -158,7 +158,7 @@ class AdminpermissionsController extends AbstractAdminController implements Repo
         endforeach;
         $table = $this->view->renderTemplate(
             'permissionsAdminListItem',
-            $this->configuration->getVendorNameDir().'user/src/Resources/views/admin/',
+            $this->configuration->getVendorNameDir() . 'user/src/Resources/views/admin/',
             [
                 'headers' => $headers,
                 'colspan' => count($rolesList) + 1,

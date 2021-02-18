@@ -22,11 +22,10 @@ class LoginForm extends AbstractForm
             ->addHtml(
                 Tag::linkTo([
                         'action' => 'user/password/forgotForm',
-                        'text'   => '%USER_FORGOT_PASSWORD%',
-                        'class'  => 'openmodal',
+                        'text' => '%USER_FORGOT_PASSWORD%',
+                        'class' => 'openmodal',
                     ]
                 )
-            )
-        ;
+            );
     }
 }

@@ -13,7 +13,7 @@ class UserRepository
 
         /** @var User $user */
         $user = User::findById($id);
-        if($user instanceof User):
+        if ($user instanceof User):
             return $user;
         endif;
 
@@ -26,7 +26,7 @@ class UserRepository
 
         /** @var User $user */
         $user = User::findFirst();
-        if($user instanceof User):
+        if ($user instanceof User):
             return $user;
         endif;
 
@@ -35,11 +35,11 @@ class UserRepository
 
     public function getByPasswordResetToken(string $token): ?User
     {
-        User::setFindValue('passwordReset.passwordResetToken',$token);
+        User::setFindValue('passwordReset.passwordResetToken', $token);
 
         /** @var User $user */
         $user = User::findFirst();
-        if($user instanceof User):
+        if ($user instanceof User):
             return $user;
         endif;
 
@@ -51,10 +51,11 @@ class UserRepository
         bool $hideUnpublished = true,
         ?int $limit = null,
         ?FindOrderIterator $findOrders = null
-    ): UserIterator {
+    ): UserIterator
+    {
         User::setFindPublished($hideUnpublished);
         User::addFindOrder('name');
-        if($limit !== null) :
+        if ($limit !== null) :
             User::setFindLimit($limit);
         endif;
         $this->parseFindValues($findValues);

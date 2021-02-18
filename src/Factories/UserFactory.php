@@ -14,13 +14,13 @@ class UserFactory
         string $password,
         string $permissionRoleId,
         bool $published = false
-    ) : User
+    ): User
     {
         $user = new User();
         $user->set('email', $email);
         $user->setPublished($published);
         //if($password) :
-            //$user->set('password', Di::getDefault()->get('security')->hash($password));
+        //$user->set('password', Di::getDefault()->get('security')->hash($password));
         //endif;
 
         PermissionRole::setFindValue('calling_name', $calling_name);

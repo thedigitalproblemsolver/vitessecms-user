@@ -40,12 +40,12 @@ class PasswordController extends AbstractController implements RepositoriesInter
     public function resetFormAction(): void
     {
         $hasErrors = true;
-        if($this->dispatcher->getParam(0)) :
-            User::setFindValue('passwordReset.passwordResetToken',$this->dispatcher->getParam(0));
+        if ($this->dispatcher->getParam(0)) :
+            User::setFindValue('passwordReset.passwordResetToken', $this->dispatcher->getParam(0));
             $user = User::findFirst();
-            if($user) :
+            if ($user) :
                 $item = ObjectFactory::create();
-                $item->set('passwordResetToken',$this->dispatcher->getParam(0));
+                $item->set('passwordResetToken', $this->dispatcher->getParam(0));
                 $this->view->setVar(
                     'content',
                     (new ResetForm($item))->renderForm('user/password/parseResetForm')
@@ -54,7 +54,7 @@ class PasswordController extends AbstractController implements RepositoriesInter
             endif;
         endif;
 
-        if($hasErrors) :
+        if ($hasErrors) :
             $this->flash->setError('CORE_SOMETHING_IS_WRONG');
         endif;
 
@@ -76,8 +76,8 @@ class PasswordController extends AbstractController implements RepositoriesInter
                 $this->view->set('systemEmailToAddress', $user->_('email'));
                 $this->view->set(
                     'resetLink',
-                    $this->url->getBaseUri().
-                    'user/password/resetForm/'.
+                    $this->url->getBaseUri() .
+                    'user/password/resetForm/' .
                     $user->_('passwordReset')->_('passwordResetToken')
                 );
 
@@ -85,13 +85,13 @@ class PasswordController extends AbstractController implements RepositoriesInter
                 $this->flash->setSucces('USER_PASSWORD_FORGOT_REQUEST_SAVED_SUCCESS');
 
                 $item = $this->repositories->item->getById($this->setting->get('USER_PAGE_PASSWORDFORGOTEMAIL'));
-                if($item !== null):
-                    $return = $this->url->getBaseUri().$item->_('slug');
+                if ($item !== null):
+                    $return = $this->url->getBaseUri() . $item->_('slug');
                 endif;
             endif;
         endif;
 
-        if($hasErrors) :
+        if ($hasErrors) :
             $this->flash->setError('CORE_SOMETHING_IS_WRONG');
         endif;
 
@@ -120,7 +120,7 @@ class PasswordController extends AbstractController implements RepositoriesInter
             $redirect = null;
         endif;
 
-        if($hasErrors) :
+        if ($hasErrors) :
             $this->flash->setError('CORE_SOMETHING_IS_WRONG');
         endif;
 
@@ -139,19 +139,18 @@ class PasswordController extends AbstractController implements RepositoriesInter
             && $this->request->get('password') === $this->request->get('password2')
         ) :
             $user = $this->repositories->user->getByPasswordResetToken($this->request->get('passwordResetToken'));
-            if($user !== null) :
+            if ($user !== null) :
                 $user->setPassword($this->security->hash($this->request->get('password')))
                     ->setPasswordReset(false)
                     ->setForcePasswordReset(false)
-                    ->save()
-                ;
+                    ->save();
 
                 $hasErrors = false;
                 $this->flash->setSucces('USER_PASSWORD_CHANGE_SUCCESS');
             endif;
         endif;
 
-        if($hasErrors) :
+        if ($hasErrors) :
             $this->flash->setError('CORE_SOMETHING_IS_WRONG');
         endif;
 

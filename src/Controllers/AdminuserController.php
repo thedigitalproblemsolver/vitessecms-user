@@ -29,7 +29,7 @@ class AdminuserController extends AbstractAdminController implements Repositorie
             && !empty($this->request->getPost('new_password'))
             && $this->user->getPermissionRole() === 'superadmin'
         ) :
-            $item->set('password',$this->security->hash($this->request->getPost('new_password')));
+            $item->set('password', $this->security->hash($this->request->getPost('new_password')));
         endif;
     }
 
@@ -52,7 +52,7 @@ class AdminuserController extends AbstractAdminController implements Repositorie
 
             $result = ['items' => []];
             while ($users->valid()) :
-                $user =$users->current();
+                $user = $users->current();
                 $tmp = ['id' => (string)$user->getId(), 'name' => $user->getEmail()];
                 $result['items'][] = $tmp;
                 $users->next();
