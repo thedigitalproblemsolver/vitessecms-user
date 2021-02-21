@@ -5,7 +5,7 @@ namespace VitesseCms\User\Models;
 use VitesseCms\Database\AbstractCollection;
 use VitesseCms\Datafield\Models\Datafield;
 use VitesseCms\Datafield\AbstractField;
-use VitesseCms\Core\Models\Datagroup;
+use VitesseCms\Datagroup\Models\Datagroup;
 
 class User extends AbstractCollection
 {
@@ -122,7 +122,7 @@ class User extends AbstractCollection
                 /** @var Datafield $datafield */
                 $datafield = Datafield::findById($datafieldObject['id']);
                 if (is_object($datafield)) :
-                    $static = 'VitesseCms\\Field\Models\\' . $datafield->_('type');
+                    $static = $datafield->getClass();
                     /** @var AbstractField $static */
                     $static::beforeSave($this, $datafield);
                 endif;
