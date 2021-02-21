@@ -21,18 +21,6 @@ class AdminuserController extends AbstractAdminController implements Repositorie
         $this->listOrder = 'email';
     }
 
-    //TODO move to listener
-    public function beforeSave(AbstractCollection $item): void
-    {
-        if (
-            $this->request->getPost('new_password')
-            && !empty($this->request->getPost('new_password'))
-            && $this->user->getPermissionRole() === 'superadmin'
-        ) :
-            $item->set('password', $this->security->hash($this->request->getPost('new_password')));
-        endif;
-    }
-
     public function deleteAction(): void
     {
         if ($this->user->getId() !== $this->dispatcher->getParam(0)) :
