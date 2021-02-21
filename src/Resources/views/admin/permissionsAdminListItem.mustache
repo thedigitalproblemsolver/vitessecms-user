@@ -1,0 +1,32 @@
+<form action="admin/user/adminpermissions/save" autocomplete="off" method="post" >
+    <table class="table table-hover table-bordered" >
+        <tr>
+            {{#headers}}
+                <th>{{{.}}}</th>
+            {{/headers}}
+        </tr>
+        {{#rows.modules}}
+                <tr>
+                    <th colspan="{{colspan}}">{{{name}}}</th>
+                </tr>
+                {{#controllers}}
+                    <tr colspan="{{colspan}}">
+                        <th>{{{name}}}</th>
+                    </tr>
+                    {{#functions}}
+                        <tr>
+                            <td>-&nbsp;{{{name}}}</td>
+                            {{#cells}}
+                                <td>{{{.}}}</td>
+                            {{/cells}}
+                        </tr>
+                    {{/functions}}
+                {{/controllers}}
+        {{/rows.modules}}
+        <tr>
+            <td colspan="{{colspan}}" >
+                <button type="submit" class="btn btn-success btn-block">%CORE_SAVE%</button>
+            </td>
+        </tr>
+    </table>
+</form>
