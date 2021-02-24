@@ -4,6 +4,8 @@ namespace VitesseCms\User\Listeners;
 
 use Phalcon\Events\Event;
 use VitesseCms\Admin\Forms\AdminlistFormInterface;
+use VitesseCms\Datafield\Models\Datafield;
+use VitesseCms\Datagroup\Models\Datagroup;
 use VitesseCms\Form\Helpers\ElementHelper;
 use VitesseCms\Form\Models\Attributes;
 use VitesseCms\Shop\Controllers\AdmincountryController;
@@ -24,13 +26,22 @@ class AdminuserControllerListener
                 $controller->request->getPost('new_password'))
             );
         endif;
+
+        if ($controller->setting->has('USER_DATAGROUP_PERSONALINFORMATION')) :
+            $datagroup = Datagroup::findById(
+                $controller->setting->get('USER_DATAGROUP_PERSONALINFORMATION')
+            );
+            foreach ($datagroup->_('datafields') as $datafieldObject) :
+                /** @var Datafield $datafield */
+                $datafield = Datafield::findById($datafieldObject['id']);
+                if (is_object($datafield)) :
+                    $controller->eventsManager->fire($datafield->getClass() . ':beforeSave', $user, $datafield);
+                endif;
+            endforeach;
+        endif;
     }
 
-    public function adminListFilter(
-        Event $event,
-        AdminuserController $controller,
-        AdminlistFormInterface $form
-    ): string
+    public function adminListFilter(Event $event, AdminuserController $controller, AdminlistFormInterface $form): string
     {
         $form->addNameField($form);
         $form->addPublishedField($form);

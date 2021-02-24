@@ -112,24 +112,6 @@ class User extends AbstractCollection
         return $user;
     }
 
-    public function beforeSave(): void
-    {
-        if ($this->di->setting->has('USER_DATAGROUP_PERSONALINFORMATION')) :
-            $datagroup = Datagroup::findById(
-                $this->di->setting->get('USER_DATAGROUP_PERSONALINFORMATION')
-            );
-            foreach ($datagroup->_('datafields') as $datafieldObject) :
-                /** @var Datafield $datafield */
-                $datafield = Datafield::findById($datafieldObject['id']);
-                if (is_object($datafield)) :
-                    $static = $datafield->getClass();
-                    /** @var AbstractField $static */
-                    $static::beforeSave($this, $datafield);
-                endif;
-            endforeach;
-        endif;
-    }
-
     public function addPersonalInformation(array $data): User
     {
         if ($this->di->setting->has('USER_DATAGROUP_PERSONALINFORMATION')) :
