@@ -22,19 +22,16 @@ class AdminuserControllerListener
             && !empty($this->$controller->getPost('new_password'))
             && $controller->user->getPermissionRole() === 'superadmin'
         ) :
-            $item->set('password', $controller->security->hash(
-                $controller->request->getPost('new_password'))
-            );
+            $item->set('password', $controller->security->hash($controller->request->getPost('new_password')));
         endif;
 
         if ($controller->setting->has('USER_DATAGROUP_PERSONALINFORMATION')) :
-            $datagroup = Datagroup::findById(
+            $datagroup = $controller->repositories->datagroup->getById(
                 $controller->setting->get('USER_DATAGROUP_PERSONALINFORMATION')
             );
-            foreach ($datagroup->_('datafields') as $datafieldObject) :
-                /** @var Datafield $datafield */
-                $datafield = Datafield::findById($datafieldObject['id']);
-                if (is_object($datafield)) :
+            foreach ($datagroup->getDatafields() as $datafieldObject) :
+                $datafield = $controller->repositories->datafield->getById($datafieldObject['id']);
+                if ($datafield !== null) :
                     $controller->eventsManager->fire($datafield->getClass() . ':beforeSave', $user, $datafield);
                 endif;
             endforeach;
@@ -53,7 +50,8 @@ class AdminuserControllerListener
                 (new Attributes())->setOptions(
                     ElementHelper::modelIteratorToOptions($controller->repositories->permissionRole->findAll())
                 )
-            );
+            )
+        ;
 
         return $form->renderForm(
             $controller->getLink() . '/' . $controller->router->getActionName(),
