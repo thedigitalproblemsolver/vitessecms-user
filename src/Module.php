@@ -5,6 +5,7 @@ namespace VitesseCms\User;
 use VitesseCms\Block\Repositories\BlockRepository;
 use VitesseCms\Content\Repositories\ItemRepository;
 use VitesseCms\Core\AbstractModule;
+use VitesseCms\Datafield\Repositories\DatafieldRepository;
 use VitesseCms\Datagroup\Repositories\DatagroupRepository;
 use VitesseCms\User\Repositories\BlockPositionRepository;
 use VitesseCms\User\Repositories\PermissionRoleRepository;
@@ -23,7 +24,8 @@ class Module extends AbstractModule
             new PermissionRoleRepository(),
             new BlockPositionRepository(),
             new BlockRepository(),
-            new DatagroupRepository()
+            new DatagroupRepository(),
+            new DatafieldRepository()
         ));
     }
 }
