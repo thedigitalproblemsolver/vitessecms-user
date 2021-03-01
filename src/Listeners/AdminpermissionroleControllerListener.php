@@ -8,11 +8,7 @@ use VitesseCms\User\Controllers\AdminpermissionroleController;
 
 class AdminpermissionroleControllerListener
 {
-    public function adminListFilter(
-        Event $event,
-        AdminpermissionroleController $controller,
-        AdminlistFormInterface $form
-    ): string
+    public function adminListFilter(Event $event, AdminpermissionroleController $controller, AdminlistFormInterface $form): string
     {
         $form->addNameField($form);
         $form->addPublishedField($form);

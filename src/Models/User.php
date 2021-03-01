@@ -5,7 +5,7 @@ namespace VitesseCms\User\Models;
 use VitesseCms\Database\AbstractCollection;
 use VitesseCms\Datafield\Models\Datafield;
 use VitesseCms\Datafield\AbstractField;
-use VitesseCms\Core\Models\Datagroup;
+use VitesseCms\Datagroup\Models\Datagroup;
 
 class User extends AbstractCollection
 {
@@ -110,24 +110,6 @@ class User extends AbstractCollection
         $user->save();
 
         return $user;
-    }
-
-    public function beforeSave(): void
-    {
-        if ($this->di->setting->has('USER_DATAGROUP_PERSONALINFORMATION')) :
-            $datagroup = Datagroup::findById(
-                $this->di->setting->get('USER_DATAGROUP_PERSONALINFORMATION')
-            );
-            foreach ($datagroup->_('datafields') as $datafieldObject) :
-                /** @var Datafield $datafield */
-                $datafield = Datafield::findById($datafieldObject['id']);
-                if (is_object($datafield)) :
-                    $static = 'VitesseCms\\Field\Models\\' . $datafield->_('type');
-                    /** @var AbstractField $static */
-                    $static::beforeSave($this, $datafield);
-                endif;
-            endforeach;
-        endif;
     }
 
     public function addPersonalInformation(array $data): User
