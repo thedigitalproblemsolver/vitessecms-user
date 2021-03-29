@@ -16,7 +16,7 @@ class PermissionRoleFactory
     {
         $permission = new PermissionRole();
         $permission->set('name', $name, true);
-        $permission->setCallingName('calling_name', $calling_name);
+        $permission->setCallingName( $calling_name);
         $permission->setPublished($published);
         $permission->setAdminAccess($adminAccess);
         $permission->setParent('parentId');

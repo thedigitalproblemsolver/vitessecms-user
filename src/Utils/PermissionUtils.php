@@ -3,6 +3,7 @@
 namespace VitesseCms\User\Utils;
 
 use VitesseCms\Core\Utils\DebugUtil;
+use VitesseCms\Core\Utils\FileUtil;
 use VitesseCms\User\Models\User;
 use Phalcon\Di;
 
@@ -277,16 +278,23 @@ class PermissionUtils
         endif;
 
         return isset(self::$aclMap[$module][$controller][$action]['access'])
-            && in_array($user->getPermissionRole(), self::$aclMap[$module][$controller][$action]['access'], true);
+            && (
+                in_array($user->getPermissionRole(), self::$aclMap[$module][$controller][$action]['access'], true)
+                || self::$aclMap[$module][$controller][$action]['access'][0] === '*'
+            )
+        ;
     }
 
     public static function getAccessFile(): array
     {
+        if(!FileUtil::exists(self::getAccessFileName())):
+            return [];
+        endif;
+
         return unserialize(
             base64_decode(
                 gzinflate(
-                    file_get_contents(self::getAccessFileName()
-                    )
+                    file_get_contents(self::getAccessFileName())
                 )
             ),
             []
