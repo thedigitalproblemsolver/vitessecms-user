@@ -259,12 +259,12 @@ class PermissionUtils
         if (
             'superadmin' === $user->getPermissionRole()
             || (
-                DebugUtil::isDocker($_SERVER['SERVER_ADDR'])
+                DebugUtil::isDev()
                 && $module === 'install'
                 && $controller === 'index'
                 && $action === 'index'
             ) || (
-                DebugUtil::isDocker($_SERVER['SERVER_ADDR'])
+                DebugUtil::isDev()
                 && $module === 'install'
                 && $controller === 'index'
                 && $action === 'createproperty'
@@ -303,7 +303,7 @@ class PermissionUtils
 
     public static function getAccessFileName(): string
     {
-        if (DebugUtil::isDocker($_SERVER['SERVER_ADDR'])) :
+        if (DebugUtil::isDev()) :
             return Di::getDefault()->get('config')->get('accountDir') . '.access_dev.dat';
         endif;
 
