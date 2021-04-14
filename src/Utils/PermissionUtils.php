@@ -279,8 +279,8 @@ class PermissionUtils
 
         return isset(self::$aclMap[$module][$controller][$action]['access'])
             && (
-                in_array($user->getPermissionRole(), self::$aclMap[$module][$controller][$action]['access'], true)
-                || self::$aclMap[$module][$controller][$action]['access'][0] === '*'
+                self::$aclMap[$module][$controller][$action]['access'][0] === '*'
+                || in_array($user->getPermissionRole(), self::$aclMap[$module][$controller][$action]['access'], true)
             )
         ;
     }
