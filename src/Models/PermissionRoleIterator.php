@@ -2,9 +2,10 @@
 
 namespace VitesseCms\User\Models;
 
+use ArrayIterator;
 use VitesseCms\Database\AbstractCollection;
 
-class PermissionRoleIterator extends \ArrayIterator
+class PermissionRoleIterator extends ArrayIterator
 {
     public function __construct(array $permissionRoles)
     {

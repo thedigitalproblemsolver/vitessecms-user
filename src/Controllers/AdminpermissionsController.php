@@ -11,6 +11,7 @@ use VitesseCms\Form\AbstractForm;
 use VitesseCms\User\Repositories\RepositoriesInterface;
 use VitesseCms\User\Utils\PermissionUtils;
 use Phalcon\Tag;
+use function in_array;
 
 class AdminpermissionsController extends AbstractAdminController implements RepositoriesInterface
 {
@@ -77,7 +78,7 @@ class AdminpermissionsController extends AbstractAdminController implements Repo
                             //check non-core acl
                             if (
                                 isset($checks[$moduleName][$controllerName][$function]['access'])
-                                && \in_array(
+                                && in_array(
                                     $role->_('calling_name'),
                                     $checks[$moduleName][$controllerName][$function]['access'],
                                     true
@@ -91,7 +92,7 @@ class AdminpermissionsController extends AbstractAdminController implements Repo
                                 isset($defaults[$moduleName][$controllerName][$function]['access'])
                                 && (
                                     $defaults[$moduleName][$controllerName][$function]['access'] === '*'
-                                    || \in_array(
+                                    || in_array(
                                         $role->_('calling_name'),
                                         $defaults[$moduleName][$controllerName][$function]['access'],
                                         true
@@ -107,7 +108,7 @@ class AdminpermissionsController extends AbstractAdminController implements Repo
                                 $parentRole = $this->repositories->permissionRole->getById($role->_('parentId'));
                                 if (
                                     isset($checks[$moduleName][$controllerName][$function]['access'])
-                                    && \in_array(
+                                    && in_array(
                                         $parentRole->_('calling_name'),
                                         $checks[$moduleName][$controllerName][$function]['access'],
                                         true
@@ -120,7 +121,7 @@ class AdminpermissionsController extends AbstractAdminController implements Repo
                                     isset($defaults[$moduleName][$controllerName][$function]['access'])
                                     && (
                                         $defaults[$moduleName][$controllerName][$function]['access'] === '*'
-                                        || \in_array(
+                                        || in_array(
                                             $parentRole->_('calling_name'),
                                             $defaults[$moduleName][$controllerName][$function]['access'],
                                             true

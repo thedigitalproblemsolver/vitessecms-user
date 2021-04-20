@@ -2,12 +2,13 @@
 
 namespace VitesseCms\User\Models;
 
+use ArrayIterator;
 use VitesseCms\Database\AbstractCollection;
 use VitesseCms\Datafield\Models\Datafield;
 use VitesseCms\Datafield\AbstractField;
 use VitesseCms\Core\Models\Datagroup;
 
-class UserIterator extends \ArrayIterator
+class UserIterator extends ArrayIterator
 {
     public function __construct(array $users)
     {
