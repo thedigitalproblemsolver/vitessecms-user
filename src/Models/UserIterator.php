@@ -6,7 +6,7 @@ use ArrayIterator;
 use VitesseCms\Database\AbstractCollection;
 use VitesseCms\Datafield\Models\Datafield;
 use VitesseCms\Datafield\AbstractField;
-use VitesseCms\Core\Models\Datagroup;
+use VitesseCms\Datagroup\Models\Datagroup;
 
 class UserIterator extends ArrayIterator
 {
