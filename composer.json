@@ -18,8 +18,8 @@
     }
   },
   "require": {
-    "vitessecms/content": "~0.0.17",
-    "vitessecms/block": "~0.0.21",
+    "vitessecms/content": "~0.0.18",
+    "vitessecms/block": "~0.0.22",
     "vitessecms/core": "~0.0.8",
     "vitessecms/form": "~0.0.10",
     "vitessecms/datafield": "~0.0.10"
