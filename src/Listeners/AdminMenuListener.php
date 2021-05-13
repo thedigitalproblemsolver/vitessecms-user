@@ -4,7 +4,7 @@ namespace VitesseCms\User\Listeners;
 
 use VitesseCms\Admin\Models\AdminMenu;
 use VitesseCms\Admin\Models\AdminMenuNavBarChildren;
-use VitesseCms\Core\Models\Datagroup;
+use VitesseCms\Datagroup\Models\Datagroup;
 use Phalcon\Events\Event;
 
 class AdminMenuListener
@@ -14,7 +14,8 @@ class AdminMenuListener
         if ('superadmin' === $adminMenu->getUser()->getPermissionRole()) :
             $children = new AdminMenuNavBarChildren();
             $children->addChild('Permissions', 'admin/user/adminpermissions/adminList')
-                ->addChild('Permissions Roles', 'admin/user/adminpermissionrole/adminList');
+                ->addChild('Permissions Roles', 'admin/user/adminpermissionrole/adminList')
+                ->addChild('Logout', 'user/index/logout');
             $adminMenu->addDropdown('Permissions', $children);
         endif;
 
