@@ -14,7 +14,8 @@ class AdminMenuListener
         if ('superadmin' === $adminMenu->getUser()->getPermissionRole()) :
             $children = new AdminMenuNavBarChildren();
             $children->addChild('Permissions', 'admin/user/adminpermissions/adminList')
-                ->addChild('Permissions Roles', 'admin/user/adminpermissionrole/adminList');
+                ->addChild('Permissions Roles', 'admin/user/adminpermissionrole/adminList')
+                ->addChild('Logout', 'user/index/logout');
             $adminMenu->addDropdown('Permissions', $children);
         endif;
 
