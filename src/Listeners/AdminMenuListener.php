@@ -14,8 +14,7 @@ class AdminMenuListener
         if ('superadmin' === $adminMenu->getUser()->getPermissionRole()) :
             $children = new AdminMenuNavBarChildren();
             $children->addChild('Permissions', 'admin/user/adminpermissions/adminList')
-                ->addChild('Permissions Roles', 'admin/user/adminpermissionrole/adminList')
-                ->addChild('Logout', 'user/index/logout');
+                ->addChild('Permissions Roles', 'admin/user/adminpermissionrole/adminList');
             $adminMenu->addDropdown('Permissions', $children);
         endif;
 
@@ -29,6 +28,7 @@ class AdminMenuListener
                 $children->addChild($contentGroup->_('name'), 'admin/content/adminitem/adminList/?filter[datagroup]=' . $contentGroup->getId());
             endforeach;
 
+            $children->addChild('Logout', 'user/index/logout');
             $adminMenu->addDropdown('Users', $children);
         endif;
     }
