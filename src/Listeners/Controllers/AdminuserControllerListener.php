@@ -1,16 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace VitesseCms\User\Listeners;
+namespace VitesseCms\User\Listeners\Controllers;
 
 use Phalcon\Events\Event;
 use VitesseCms\Admin\Forms\AdminlistFormInterface;
-use VitesseCms\Datafield\Models\Datafield;
-use VitesseCms\Datagroup\Models\Datagroup;
 use VitesseCms\Form\Helpers\ElementHelper;
 use VitesseCms\Form\Models\Attributes;
-use VitesseCms\Shop\Controllers\AdmincountryController;
 use VitesseCms\User\Controllers\AdminuserController;
-use VitesseCms\User\Models\PermissionRole;
 use VitesseCms\User\Models\User;
 
 class AdminuserControllerListener
