@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace VitesseCms\User\Listeners;
+namespace VitesseCms\User\Listeners\Admin;
 
 use VitesseCms\Admin\Models\AdminMenu;
 use VitesseCms\Admin\Models\AdminMenuNavBarChildren;
@@ -11,13 +11,6 @@ class AdminMenuListener
 {
     public function AddChildren(Event $event, AdminMenu $adminMenu): void
     {
-        if ('superadmin' === $adminMenu->getUser()->getPermissionRole()) :
-            $children = new AdminMenuNavBarChildren();
-            $children->addChild('Permissions', 'admin/user/adminpermissions/adminList')
-                ->addChild('Permissions Roles', 'admin/user/adminpermissionrole/adminList');
-            $adminMenu->addDropdown('Permissions', $children);
-        endif;
-
         $group = $adminMenu->getGroups()->getByKey('user');
         if ($group !== null) :
             $children = new AdminMenuNavBarChildren();
