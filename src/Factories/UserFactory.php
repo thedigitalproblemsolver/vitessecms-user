@@ -4,6 +4,8 @@ namespace VitesseCms\User\Factories;
 
 use VitesseCms\Database\Models\FindValue;
 use VitesseCms\Database\Models\FindValueIterator;
+use VitesseCms\Datafield\Repositories\DatafieldRepository;
+use VitesseCms\Datagroup\Models\Datagroup;
 use VitesseCms\User\Enums\UserRoleEnum;
 use VitesseCms\User\Models\User;
 use Phalcon\Di;
@@ -41,5 +43,21 @@ class UserFactory
         endif;
 
         return $user;
+    }
+
+    public static function bindByDatagroup(Datagroup $datagroup, array $data, User $user, DatafieldRepository $datafieldRepository)
+    {
+        foreach ($datagroup->getDatafields() as $field) :
+            $datafield = $datafieldRepository->getById($field['id']);
+            if ($datafield !== null) :
+                if (isset($data[$datafield->getCallingName()])):
+                    $user->set($datafield->getCallingName(), $data[$datafield->getCallingName()]);
+                endif;
+
+                if (isset($data['BSON_' . $datafield->getCallingName()])) :
+                    $user->set('BSON_' . $datafield->getCallingName(), $data['BSON_' . $datafield->getCallingName()]);
+                endif;
+            endif;
+        endforeach;
     }
 }

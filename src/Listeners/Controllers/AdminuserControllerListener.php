@@ -7,6 +7,8 @@ use VitesseCms\Admin\Forms\AdminlistFormInterface;
 use VitesseCms\Form\Helpers\ElementHelper;
 use VitesseCms\Form\Models\Attributes;
 use VitesseCms\User\Controllers\AdminuserController;
+use VitesseCms\User\Enums\SettingEnum;
+use VitesseCms\User\Enums\UserRoleEnum;
 use VitesseCms\User\Models\User;
 
 class AdminuserControllerListener
@@ -16,19 +18,19 @@ class AdminuserControllerListener
         if (
             $controller->request->getPost('new_password')
             && !empty($this->$controller->getPost('new_password'))
-            && $controller->user->getPermissionRole() === 'superadmin'
+            && $controller->user->getPermissionRole() === UserRoleEnum::SUPER_ADMIN
         ) :
-            $item->set('password', $controller->security->hash($controller->request->getPost('new_password')));
+            $user->setPassword($controller->security->hash($controller->request->getPost('new_password')));
         endif;
 
-        if ($controller->setting->has('USER_DATAGROUP_PERSONALINFORMATION')) :
+        if ($controller->setting->has(SettingEnum::USER_DATAGROUP_PERSONALINFORMATION)) :
             $datagroup = $controller->repositories->datagroup->getById(
-                $controller->setting->get('USER_DATAGROUP_PERSONALINFORMATION')
+                $controller->setting->get(SettingEnum::USER_DATAGROUP_PERSONALINFORMATION)
             );
             foreach ($datagroup->getDatafields() as $datafieldObject) :
                 $datafield = $controller->repositories->datafield->getById($datafieldObject['id']);
                 if ($datafield !== null) :
-                    $controller->eventsManager->fire($datafield->getClass() . ':beforeSave', $user, $datafield);
+                    $controller->eventsManager->fire($datafield->getType() . ':beforeSave', $user, $datafield);
                 endif;
             endforeach;
         endif;
