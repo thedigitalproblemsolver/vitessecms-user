@@ -8,6 +8,7 @@ use VitesseCms\Form\Helpers\ElementHelper;
 use VitesseCms\Form\Models\Attributes;
 use VitesseCms\User\Controllers\AdminuserController;
 use VitesseCms\User\Enums\SettingEnum;
+use VitesseCms\User\Enums\UserRoleEnum;
 use VitesseCms\User\Models\User;
 
 class AdminuserControllerListener
@@ -17,9 +18,9 @@ class AdminuserControllerListener
         if (
             $controller->request->getPost('new_password')
             && !empty($this->$controller->getPost('new_password'))
-            && $controller->user->getPermissionRole() === 'superadmin'
+            && $controller->user->getPermissionRole() === UserRoleEnum::SUPER_ADMIN
         ) :
-            $user->set('password', $controller->security->hash($controller->request->getPost('new_password')));
+            $user->setPassword($controller->security->hash($controller->request->getPost('new_password')));
         endif;
 
         if ($controller->setting->has(SettingEnum::USER_DATAGROUP_PERSONALINFORMATION)) :
