@@ -3,9 +3,10 @@
 namespace VitesseCms\User\Models;
 
 use VitesseCms\Database\AbstractCollection;
-use VitesseCms\Datafield\Models\Datafield;
-use VitesseCms\Datafield\AbstractField;
+use VitesseCms\Datafield\Repositories\DatafieldRepository;
 use VitesseCms\Datagroup\Models\Datagroup;
+use VitesseCms\User\Enums\SettingEnum;
+use VitesseCms\User\Factories\UserFactory;
 
 class User extends AbstractCollection
 {
@@ -114,12 +115,11 @@ class User extends AbstractCollection
 
     public function addPersonalInformation(array $data): User
     {
-        if ($this->di->setting->has('USER_DATAGROUP_PERSONALINFORMATION')) :
-            $datagroup = Datagroup::findById(
-                $this->di->setting->get('USER_DATAGROUP_PERSONALINFORMATION')
-            );
+        if ($this->di->setting->has(SettingEnum::USER_DATAGROUP_PERSONALINFORMATION)) :
+            /** @var Datagroup $datagroup */
+            $datagroup = Datagroup::findById($this->di->setting->get(SettingEnum::USER_DATAGROUP_PERSONALINFORMATION));
             if ($datagroup) :
-                $this->bindByDatagroup($datagroup, $data);
+                UserFactory::bindByDatagroup($datagroup, $data, $this, new DatafieldRepository());
             endif;
         endif;
 
