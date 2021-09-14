@@ -85,7 +85,7 @@ class IndexController extends AbstractController implements RepositoriesInterfac
             endif;
 
             if ($hasErrors) :
-                $this->flash->setError('USER_LOGIN_FAILED', 'error');
+                $this->flash->setError('USER_LOGIN_FAILED');
             endif;
 
             $this->redirect($return, $ajax, true, true);

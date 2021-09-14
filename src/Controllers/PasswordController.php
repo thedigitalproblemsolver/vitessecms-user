@@ -4,7 +4,6 @@ namespace VitesseCms\User\Controllers;
 
 use VitesseCms\Core\AbstractController;
 use VitesseCms\Core\Factories\ObjectFactory;
-use VitesseCms\Core\Helpers\Sef;
 use VitesseCms\User\Factories\PasswordFactory;
 use VitesseCms\User\Forms\ChangeForm;
 use VitesseCms\User\Forms\LoginForm;
@@ -12,6 +11,7 @@ use VitesseCms\User\Forms\ForgotPasswordForm;
 use VitesseCms\User\Forms\ResetForm;
 use VitesseCms\User\Repositories\RepositoriesInterface;
 use VitesseCms\User\Models\User;
+use \stdClass;
 
 class PasswordController extends AbstractController implements RepositoriesInterface
 {
