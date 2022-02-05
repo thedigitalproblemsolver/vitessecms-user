@@ -273,16 +273,24 @@ class PermissionUtils
             return true;
         endif;
 
+        if(
+            isset(self::getDefaults()[$module][$controller][$action]['access'])
+            && self::getDefaults()[$module][$controller][$action]['access'][0] === '*'
+        ) :
+            return true;
+        endif;
+
         if (!is_array(self::$aclMap)) :
             self::$aclMap = self::getAccessFile();
         endif;
 
-        return isset(self::$aclMap[$module][$controller][$action]['access'])
+        return
+            isset(self::$aclMap[$module][$controller][$action]['access'])
             && (
                 self::$aclMap[$module][$controller][$action]['access'][0] === '*'
                 || in_array($user->getPermissionRole(), self::$aclMap[$module][$controller][$action]['access'], true)
             )
-        ;
+            ;
     }
 
     public static function getAccessFile(): array
