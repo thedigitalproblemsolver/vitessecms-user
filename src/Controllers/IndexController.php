@@ -26,7 +26,7 @@ class IndexController extends AbstractController implements RepositoriesInterfac
                 $tmp = [
                     'id' => $block->getId(),
                     'name' => $block->getNameField(),
-                    'content' => $this->di->eventsManager->fire(BlockEnum::BLOCK_LISTENER . ':renderBlock', $block)
+                    'content' => $this->eventsManager->fire(BlockEnum::BLOCK_LISTENER . ':renderBlock', $block)
                 ];
                 $tabs[] = $tmp;
                 $blockPositions->next();
