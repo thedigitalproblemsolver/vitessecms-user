@@ -2,7 +2,7 @@
 
 namespace VitesseCms\User\Controllers;
 
-use VitesseCms\Block\Helpers\BlockHelper;
+use VitesseCms\Block\Enum\BlockEnum;
 use VitesseCms\Block\Models\Block;
 use VitesseCms\Block\Models\BlockPosition;
 use VitesseCms\Content\Models\Item;
@@ -26,7 +26,7 @@ class IndexController extends AbstractController implements RepositoriesInterfac
                 $tmp = [
                     'id' => $block->getId(),
                     'name' => $block->getNameField(),
-                    'content' => BlockHelper::render($block, $this->view, $this->cache)
+                    'content' => $this->di->eventsManager->fire(BlockEnum::BLOCK_LISTENER . ':renderBlock', $block)
                 ];
                 $tabs[] = $tmp;
                 $blockPositions->next();
