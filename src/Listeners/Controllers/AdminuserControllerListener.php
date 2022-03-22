@@ -16,8 +16,8 @@ class AdminuserControllerListener
     public function beforeModelSave(Event $event, AdminuserController $controller, User $user): void
     {
         if (
-            $controller->request->getPost('new_password')
-            && !empty($this->$controller->getPost('new_password'))
+            $controller->request->hasPost('new_password')
+            && !empty($controller->request->getPost('new_password'))
             && $controller->user->getPermissionRole() === UserRoleEnum::SUPER_ADMIN
         ) :
             $user->setPassword($controller->security->hash($controller->request->getPost('new_password')));
