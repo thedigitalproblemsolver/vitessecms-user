@@ -27,5 +27,5 @@ class Module extends AbstractModule
             new DatagroupRepository(),
             new DatafieldRepository()
         ));
-    }
+    } 
 }
