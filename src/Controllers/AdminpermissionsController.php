@@ -46,6 +46,7 @@ class AdminpermissionsController extends AbstractAdminController implements Repo
 
         $rows = ['modules' => []];
         foreach ($modules as $moduleName => $modulePath) :
+            //var_dump($moduleName);
             $controllers = DirectoryUtil::getFilelist($modulePath . '/Controllers');
             foreach ($controllers as $controllerPath => $controllerNameLong) :
                 $adminOnlyAccess = false;
@@ -56,6 +57,7 @@ class AdminpermissionsController extends AbstractAdminController implements Repo
                 $functions = FileUtil::getFunctions($controllerPath, $this->configuration);
                 $permissions = [];
                 foreach ($functions as $function) :
+                    //var_dump($function);
                     $controllerName = str_replace('controller', '', strtolower(FileUtil::getName($controllerNameLong)));
                     $orgName = $function;
                     $function = strtolower(str_replace('Action', '', $function));
@@ -144,7 +146,7 @@ class AdminpermissionsController extends AbstractAdminController implements Repo
                         'cells' => $cells
                     ];
                 endforeach;
-                $rowsControllers = [
+                $rowsControllers[] = [
                     'name' => FileUtil::getName($controllerNameLong),
                     'functions' => $permissions
                 ];
