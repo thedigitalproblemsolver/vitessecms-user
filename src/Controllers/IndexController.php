@@ -93,7 +93,7 @@ class IndexController extends AbstractController implements RepositoriesInterfac
         $this->session->destroy();
         $this->flash->setSucces('USER_LOGOUT_SUCCESS');
 
-        $this->redirect();
+        $this->redirect('/');
     }
 
     public function loginformAction(): void
