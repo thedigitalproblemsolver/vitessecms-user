@@ -15,7 +15,7 @@ class IndexController extends AbstractController implements RepositoriesInterfac
     {
         if ($this->user->isLoggedIn()) :
             $tabs = [];
-            $blockPositions = $this->repositories->blockPosition->getByMyAccountPosition($this->user->getPermissionRole());
+            $blockPositions = $this->repositories->blockPosition->getByMyAccountPosition($this->user->getRole());
             while ($blockPositions->valid()) :
                 $blockPosition = $blockPositions->current();
                 $block = $this->repositories->block->getById($blockPosition->getBlock());
