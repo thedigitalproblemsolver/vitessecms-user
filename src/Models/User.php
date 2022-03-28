@@ -158,4 +158,9 @@ class User extends AbstractCollection
 
         return $this;
     }
+
+    public function getRole(): string
+    {
+        return $this->role;
+    }
 }
