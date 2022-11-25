@@ -2,14 +2,11 @@
 
 namespace VitesseCms\User\Forms;
 
-use VitesseCms\Datagroup\Models\Datagroup;
-use VitesseCms\Form\AbstractForm;
 use VitesseCms\Form\AbstractFormWithRepository;
 use VitesseCms\Form\Helpers\ElementHelper;
 use VitesseCms\Form\Interfaces\FormWithRepositoryInterface;
 use VitesseCms\Form\Models\Attributes;
-use VitesseCms\User\Enums\UserRoleEnum;
-use VitesseCms\User\Models\PermissionRole;
+use VitesseCms\User\Enum\UserRoleEnum;
 use VitesseCms\User\Repositories\RepositoryCollection;
 
 class UserForm extends AbstractFormWithRepository
