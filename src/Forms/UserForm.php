@@ -7,15 +7,9 @@ use VitesseCms\Form\Helpers\ElementHelper;
 use VitesseCms\Form\Interfaces\FormWithRepositoryInterface;
 use VitesseCms\Form\Models\Attributes;
 use VitesseCms\User\Enum\UserRoleEnum;
-use VitesseCms\User\Repositories\RepositoryCollection;
 
 class UserForm extends AbstractFormWithRepository
 {
-    /**
-     * @var RepositoryCollection
-     */
-    protected $repositories;
-
     public function buildForm(): FormWithRepositoryInterface
     {
         $this->addEmail('%CORE_EMAIL%', 'email', (new Attributes())->setRequired())

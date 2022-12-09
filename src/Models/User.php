@@ -5,7 +5,7 @@ namespace VitesseCms\User\Models;
 use VitesseCms\Database\AbstractCollection;
 use VitesseCms\Datafield\Repositories\DatafieldRepository;
 use VitesseCms\Datagroup\Models\Datagroup;
-use VitesseCms\User\Enums\SettingEnum;
+use VitesseCms\User\Enum\SettingEnum;
 use VitesseCms\User\Factories\UserFactory;
 
 class User extends AbstractCollection
@@ -25,7 +25,7 @@ class User extends AbstractCollection
     /**
      * @var bool
      */
-    protected $forcePasswordReset;
+    public $forcePasswordReset;
     /**
      * @var bool
      */

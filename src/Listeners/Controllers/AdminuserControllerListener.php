@@ -8,7 +8,7 @@ use VitesseCms\Form\Helpers\ElementHelper;
 use VitesseCms\Form\Models\Attributes;
 use VitesseCms\User\Controllers\AdminuserController;
 use VitesseCms\User\Enum\UserRoleEnum;
-use VitesseCms\User\Enums\SettingEnum;
+use VitesseCms\User\Enum\SettingEnum;
 use VitesseCms\User\Models\User;
 
 class AdminuserControllerListener
