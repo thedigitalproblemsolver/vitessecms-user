@@ -3,7 +3,6 @@
 namespace VitesseCms\User\Models;
 
 use ArrayIterator;
-use VitesseCms\Database\AbstractCollection;
 
 class PermissionRoleIterator extends ArrayIterator
 {
