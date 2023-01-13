@@ -2,23 +2,14 @@
 
 namespace VitesseCms\User\Forms;
 
-use VitesseCms\Datagroup\Models\Datagroup;
-use VitesseCms\Form\AbstractForm;
 use VitesseCms\Form\AbstractFormWithRepository;
 use VitesseCms\Form\Helpers\ElementHelper;
 use VitesseCms\Form\Interfaces\FormWithRepositoryInterface;
 use VitesseCms\Form\Models\Attributes;
-use VitesseCms\User\Enums\UserRoleEnum;
-use VitesseCms\User\Models\PermissionRole;
-use VitesseCms\User\Repositories\RepositoryCollection;
+use VitesseCms\User\Enum\UserRoleEnum;
 
 class UserForm extends AbstractFormWithRepository
 {
-    /**
-     * @var RepositoryCollection
-     */
-    protected $repositories;
-
     public function buildForm(): FormWithRepositoryInterface
     {
         $this->addEmail('%CORE_EMAIL%', 'email', (new Attributes())->setRequired())

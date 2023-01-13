@@ -11,7 +11,7 @@ use VitesseCms\User\Repositories\BlockPositionRepository;
 use VitesseCms\User\Repositories\PermissionRoleRepository;
 use VitesseCms\User\Repositories\RepositoryCollection;
 use VitesseCms\User\Repositories\UserRepository;
-use Phalcon\DiInterface;
+use Phalcon\Di\DiInterface;
 
 class Module extends AbstractModule
 {
@@ -27,5 +27,5 @@ class Module extends AbstractModule
             new DatagroupRepository(),
             new DatafieldRepository()
         ));
-    } 
+    }
 }

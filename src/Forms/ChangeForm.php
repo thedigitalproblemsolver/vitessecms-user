@@ -7,7 +7,6 @@ use VitesseCms\Form\Models\Attributes;
 
 class ChangeForm extends AbstractForm
 {
-
     public function initialize()
     {
         $this->addPassword('%USER_PASSWORD_OLD%', 'password_old', (new Attributes())->setRequired())
