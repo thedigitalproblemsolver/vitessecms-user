@@ -21,7 +21,7 @@ class UserLogin extends AbstractBlockModel
         $block->set('loginUrl', 'user/loginform');
         $block->set('loggendIn', 0);
 
-        if ($this->di->user->isLoggedIn()):
+        if ($this->getDi()->getUser()->isLoggedIn()):
             $block->set('loginUrl', 'user/logout');
             $block->set('loggendIn', 1);
         endif;
