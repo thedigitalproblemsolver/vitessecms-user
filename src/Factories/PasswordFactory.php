@@ -2,10 +2,9 @@
 
 namespace VitesseCms\User\Factories;
 
+use Phalcon\Security\Random;
 use VitesseCms\Core\Factories\ObjectFactory;
 use VitesseCms\Core\Interfaces\BaseObjectInterface;
-use VitesseCms\User\Models\User;
-use Phalcon\Security\Random;
 
 class PasswordFactory
 {

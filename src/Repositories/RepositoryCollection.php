@@ -2,13 +2,11 @@
 
 namespace VitesseCms\User\Repositories;
 
-use VitesseCms\Block\Models\BlockPosition;
 use VitesseCms\Block\Repositories\BlockRepository;
 use VitesseCms\Content\Repositories\ItemRepository;
+use VitesseCms\Database\Interfaces\BaseRepositoriesInterface;
 use VitesseCms\Datafield\Repositories\DatafieldRepository;
 use VitesseCms\Datagroup\Repositories\DatagroupRepository;
-use VitesseCms\Database\Interfaces\BaseRepositoriesInterface;
-use VitesseCms\User\Repositories\RepositoriesInterface;
 
 class RepositoryCollection implements RepositoriesInterface, BaseRepositoriesInterface
 {
@@ -48,13 +46,13 @@ class RepositoryCollection implements RepositoriesInterface, BaseRepositoriesInt
     public $datafield;
 
     public function __construct(
-        UserRepository $userRepository,
-        ItemRepository $itemRepository,
+        UserRepository           $userRepository,
+        ItemRepository           $itemRepository,
         PermissionRoleRepository $permissionRoleRepository,
-        BlockPositionRepository $blockPositionRepository,
-        BlockRepository $blockRepository,
-        DatagroupRepository $datagroupRepository,
-        DatafieldRepository $datafieldRepository
+        BlockPositionRepository  $blockPositionRepository,
+        BlockRepository          $blockRepository,
+        DatagroupRepository      $datagroupRepository,
+        DatafieldRepository      $datafieldRepository
     )
     {
         $this->user = $userRepository;

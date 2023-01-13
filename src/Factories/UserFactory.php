@@ -2,13 +2,13 @@
 
 namespace VitesseCms\User\Factories;
 
+use Phalcon\Di\Di;
 use VitesseCms\Database\Models\FindValue;
 use VitesseCms\Database\Models\FindValueIterator;
 use VitesseCms\Datafield\Repositories\DatafieldRepository;
 use VitesseCms\Datagroup\Models\Datagroup;
-use VitesseCms\User\Enums\UserRoleEnum;
+use VitesseCms\User\Enum\UserRoleEnum;
 use VitesseCms\User\Models\User;
-use Phalcon\Di;
 use VitesseCms\User\Repositories\PermissionRoleRepository;
 
 class UserFactory
@@ -17,13 +17,13 @@ class UserFactory
         string $email,
         string $password,
         string $permissionRoleId,
-        bool $published = false
+        bool   $published = false
     ): User
     {
         $user = new User();
         $user->set('email', $email);
         $user->setPublished($published);
-        if($password) :
+        if ($password) :
             $user->set('password', Di::getDefault()->get('security')->hash($password));
         endif;
         $user->setRole($permissionRoleId);
@@ -35,11 +35,11 @@ class UserFactory
     {
         $permissionRoleRepository = new PermissionRoleRepository();
         $guestRole = $permissionRoleRepository->findFirst(new FindValueIterator(
-            [new FindValue('calling_name',UserRoleEnum::GUEST)]
+            [new FindValue('calling_name', UserRoleEnum::GUEST)]
         ));
         $user = new User();
-        if($guestRole !== null) :
-            $user->setRole((string) $guestRole->getId());
+        if ($guestRole !== null) :
+            $user->setRole((string)$guestRole->getId());
         endif;
 
         return $user;

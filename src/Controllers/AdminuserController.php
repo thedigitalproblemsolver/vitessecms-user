@@ -3,12 +3,11 @@
 namespace VitesseCms\User\Controllers;
 
 use VitesseCms\Admin\AbstractAdminController;
-use VitesseCms\Database\AbstractCollection;
 use VitesseCms\Database\Models\FindValue;
 use VitesseCms\Database\Models\FindValueIterator;
 use VitesseCms\User\Forms\UserForm;
-use VitesseCms\User\Repositories\RepositoriesInterface;
 use VitesseCms\User\Models\User;
+use VitesseCms\User\Repositories\RepositoriesInterface;
 
 class AdminuserController extends AbstractAdminController implements RepositoriesInterface
 {
