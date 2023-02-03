@@ -5,21 +5,18 @@ namespace VitesseCms\User\Controllers;
 use Phalcon\Encryption\Security;
 use Phalcon\Session\Manager as Session;
 use stdClass;
-use VitesseCms\Block\Enum\BlockEnum;
+use VitesseCms\Block\DTO\RenderPositionDTO;
 use VitesseCms\Block\Enum\BlockPositionEnum;
-use VitesseCms\Block\Repositories\BlockRepository;
 use VitesseCms\Content\Enum\ItemEnum;
 use VitesseCms\Content\Repositories\ItemRepository;
 use VitesseCms\Core\AbstractControllerFrontend;
 use VitesseCms\Core\Enum\SecurityEnum;
 use VitesseCms\Core\Enum\SessionEnum;
 use VitesseCms\Core\Enum\UrlEnum;
-use VitesseCms\Core\Factories\ObjectFactory;
 use VitesseCms\Core\Services\UrlService;
 use VitesseCms\User\Enum\UserEnum;
 use VitesseCms\User\Forms\LoginForm;
 use VitesseCms\User\Models\User;
-use VitesseCms\User\Repositories\BlockPositionRepository;
 use VitesseCms\User\Repositories\UserRepository;
 
 class IndexController extends AbstractControllerFrontend
@@ -27,8 +24,6 @@ class IndexController extends AbstractControllerFrontend
     private UrlService $urlService;
     private Security $securityService;
     private Session $sessionService;
-    private BlockPositionRepository $blockPositionRepository;
-    private BlockRepository $blockRepository;
     private UserRepository $userRepository;
     private ItemRepository $itemRepository;
     private User $activeUser;
@@ -40,8 +35,6 @@ class IndexController extends AbstractControllerFrontend
         $this->urlService = $this->eventsManager->fire(UrlEnum::ATTACH_SERVICE_LISTENER, new stdClass());
         $this->securityService = $this->eventsManager->fire(SecurityEnum::ATTACH_SERVICE_LISTENER, new stdClass());
         $this->sessionService = $this->eventsManager->fire(SessionEnum::ATTACH_SERVICE_LISTENER, new stdClass());
-        $this->blockPositionRepository = $this->eventsManager->fire(BlockPositionEnum::GET_REPOSITORY, new stdClass());
-        $this->blockRepository = $this->eventsManager->fire(BlockEnum::GET_REPOSITORY, new stdClass());
         $this->userRepository = $this->eventsManager->fire(UserEnum::GET_REPOSITORY, new stdClass());
         $this->itemRepository = $this->eventsManager->fire(ItemEnum::GET_REPOSITORY, new stdClass());
         $this->activeUser = $this->eventsManager->fire(UserEnum::GET_ACTIVE_USER_LISTENER, new stdClass());
@@ -50,36 +43,13 @@ class IndexController extends AbstractControllerFrontend
     public function indexAction(): void
     {
         if ($this->activeUser->isLoggedIn()) :
-            $block = ObjectFactory::create();
-            $block->set('items', $this->getTabsByPosition());
-
-            $this->viewService->setVar('content', $this->viewService->renderTemplate(
-                'scrollspy',
-                'partials/bootstrap',
-                ['block' => $block]
+            $this->viewService->setVar('content', $this->eventsManager->fire(
+                BlockPositionEnum::RENDER_POSITION,
+                new RenderPositionDTO('myaccount', $this->activeUser->getRole())
             ));
         else :
             $this->redirect('user/loginform', 401, 'Unauthorized');
         endif;
-    }
-
-    private function getTabsByPosition(): array
-    {
-        $tabs = [];
-        $blockPositions = $this->blockPositionRepository->getByMyAccountPosition($this->activeUser->getRole());
-        while ($blockPositions->valid()) :
-            $blockPosition = $blockPositions->current();
-            $block = $this->blockRepository->getById($blockPosition->getBlock());
-            $tmp = [
-                'id' => $block->getId(),
-                'name' => $block->getNameField(),
-                'content' => $this->eventsManager->fire(BlockEnum::BLOCK_LISTENER . ':renderBlock', $block)
-            ];
-            $tabs[] = $tmp;
-            $blockPositions->next();
-        endwhile;
-
-        return $tabs;
     }
 
     public function loginAction(): void
@@ -89,7 +59,7 @@ class IndexController extends AbstractControllerFrontend
         $return = null;
 
         if ($this->activeUser->isLoggedIn()) :
-            $this->redirect('user/index', [], true, true);
+            $this->redirect('user/index');
         else :
             $loginForm = new LoginForm();
             if ($loginForm->validate()) :
@@ -118,7 +88,7 @@ class IndexController extends AbstractControllerFrontend
                 $this->flashService->setError('USER_LOGIN_FAILED');
             endif;
 
-            $this->redirect($return, $ajax, true, true);
+            $this->redirect($return);
         endif;
     }
 
