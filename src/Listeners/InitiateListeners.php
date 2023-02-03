@@ -4,10 +4,12 @@ namespace VitesseCms\User\Listeners;
 
 use VitesseCms\Core\Interfaces\InitiateListenersInterface;
 use VitesseCms\Core\Interfaces\InjectableInterface;
+use VitesseCms\User\Enum\AclEnum;
 use VitesseCms\User\Enum\UserEnum;
 use VitesseCms\User\Enum\UserRoleEnum;
 use VitesseCms\User\Listeners\Admin\AdminMenuListener;
 use VitesseCms\User\Listeners\Admin\AdminMenuPermissionListener;
+use VitesseCms\User\Listeners\Services\AclServiceListener;
 use VitesseCms\User\Repositories\UserRepository;
 
 class InitiateListeners implements InitiateListenersInterface
@@ -20,9 +22,7 @@ class InitiateListeners implements InitiateListenersInterface
         if ($di->user->hasAdminAccess()) :
             $di->eventsManager->attach('adminMenu', new AdminMenuListener());
         endif;
-        $di->eventsManager->attach(UserEnum::USER_LISTENER, new UserListener(
-            $di->user,
-            new UserRepository()
-        ));
+        $di->eventsManager->attach(UserEnum::SERVICE_LISTENER, new UserListener($di->user, new UserRepository()));
+        $di->eventsManager->attach(AclEnum::SERVICE_LISTENER, new AclServiceListener($di->acl));
     }
 }

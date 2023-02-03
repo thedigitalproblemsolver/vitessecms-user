@@ -10,54 +10,41 @@ use VitesseCms\Block\Enum\BlockPositionEnum;
 use VitesseCms\Block\Repositories\BlockRepository;
 use VitesseCms\Content\Enum\ItemEnum;
 use VitesseCms\Content\Repositories\ItemRepository;
-use VitesseCms\Core\AbstractController;
-use VitesseCms\Core\Enum\FlashEnum;
+use VitesseCms\Core\AbstractControllerFrontend;
 use VitesseCms\Core\Enum\SecurityEnum;
 use VitesseCms\Core\Enum\SessionEnum;
 use VitesseCms\Core\Enum\UrlEnum;
-use VitesseCms\Core\Enum\ViewEnum;
 use VitesseCms\Core\Factories\ObjectFactory;
-use VitesseCms\Core\Services\FlashService;
 use VitesseCms\Core\Services\UrlService;
-use VitesseCms\Core\Services\ViewService;
-use VitesseCms\Log\Enums\LogEnum;
-use VitesseCms\Log\Services\LogService;
 use VitesseCms\User\Enum\UserEnum;
 use VitesseCms\User\Forms\LoginForm;
 use VitesseCms\User\Models\User;
 use VitesseCms\User\Repositories\BlockPositionRepository;
-use VitesseCms\User\Repositories\RepositoriesInterface;
 use VitesseCms\User\Repositories\UserRepository;
 
-class IndexController extends AbstractController implements RepositoriesInterface
+class IndexController extends AbstractControllerFrontend
 {
-    private LogService $logService;
     private UrlService $urlService;
-    private ViewService $viewService;
-    private FlashService $flashService;
-    private User $activeUser;
     private Security $securityService;
     private Session $sessionService;
     private BlockPositionRepository $blockPositionRepository;
     private BlockRepository $blockRepository;
     private UserRepository $userRepository;
     private ItemRepository $itemRepository;
+    private User $activeUser;
 
     public function onConstruct()
     {
         parent::onConstruct();
 
-        $this->logService = $this->eventsManager->fire(LogEnum::ATTACH_SERVICE_LISTENER, new stdClass());
         $this->urlService = $this->eventsManager->fire(UrlEnum::ATTACH_SERVICE_LISTENER, new stdClass());
-        $this->viewService = $this->eventsManager->fire(ViewEnum::ATTACH_SERVICE_LISTENER, new stdClass());
-        $this->flashService = $this->eventsManager->fire(FlashEnum::ATTACH_SERVICE_LISTENER, new stdClass());
-        $this->activeUser = $this->eventsManager->fire(UserEnum::GET_ACTIVE_USER_LISTENER, new stdClass());
         $this->securityService = $this->eventsManager->fire(SecurityEnum::ATTACH_SERVICE_LISTENER, new stdClass());
         $this->sessionService = $this->eventsManager->fire(SessionEnum::ATTACH_SERVICE_LISTENER, new stdClass());
         $this->blockPositionRepository = $this->eventsManager->fire(BlockPositionEnum::GET_REPOSITORY, new stdClass());
         $this->blockRepository = $this->eventsManager->fire(BlockEnum::GET_REPOSITORY, new stdClass());
         $this->userRepository = $this->eventsManager->fire(UserEnum::GET_REPOSITORY, new stdClass());
         $this->itemRepository = $this->eventsManager->fire(ItemEnum::GET_REPOSITORY, new stdClass());
+        $this->activeUser = $this->eventsManager->fire(UserEnum::GET_ACTIVE_USER_LISTENER, new stdClass());
     }
 
     public function indexAction(): void
@@ -66,21 +53,20 @@ class IndexController extends AbstractController implements RepositoriesInterfac
             $block = ObjectFactory::create();
             $block->set('items', $this->getTabsByPosition());
 
-            $this->viewService->setVar('content', $this->view->renderTemplate(
+            $this->viewService->setVar('content', $this->viewService->renderTemplate(
                 'scrollspy',
                 'partials/bootstrap',
                 ['block' => $block]
             ));
-            $this->prepareView();
         else :
-            $this->redirect('user/loginform');
+            $this->redirect('user/loginform', 401, 'Unauthorized');
         endif;
     }
 
     private function getTabsByPosition(): array
     {
         $tabs = [];
-        $blockPositions = $this->blockPositionRepository->getByMyAccountPosition($this->user->getRole());
+        $blockPositions = $this->blockPositionRepository->getByMyAccountPosition($this->activeUser->getRole());
         while ($blockPositions->valid()) :
             $blockPosition = $blockPositions->current();
             $block = $this->blockRepository->getById($blockPosition->getBlock());
@@ -158,10 +144,9 @@ class IndexController extends AbstractController implements RepositoriesInterfac
     public function loginformAction(): void
     {
         if ($this->activeUser->isLoggedIn()) :
-            $this->redirect('user/index', [], true, true);
+            $this->redirect('user/index');
         else :
             $this->viewService->set('content', (new LoginForm())->renderForm('user/login', 'login'));
         endif;
-        $this->prepareView();
     }
 }
