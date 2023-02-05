@@ -19,13 +19,13 @@ class User extends AbstractCollection
      */
     public $role;
     /**
-     * @var null
-     */
-    protected $permissionRole;
-    /**
      * @var bool
      */
     public $forcePasswordReset;
+    /**
+     * @var null
+     */
+    protected $permissionRole;
     /**
      * @var bool
      */
@@ -145,11 +145,9 @@ class User extends AbstractCollection
         return $this;
     }
 
-    public function setPassword(string $password): User
+    public function getRole(): string
     {
-        $this->password = $password;
-
-        return $this;
+        return $this->role;
     }
 
     public function setRole(string $role): User
@@ -159,8 +157,15 @@ class User extends AbstractCollection
         return $this;
     }
 
-    public function getRole(): string
+    public function getPassword(): string
     {
-        return $this->role;
+        return $this->password;
+    }
+
+    public function setPassword(string $password): User
+    {
+        $this->password = $password;
+
+        return $this;
     }
 }

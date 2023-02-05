@@ -14,6 +14,8 @@ use VitesseCms\Core\Enum\SecurityEnum;
 use VitesseCms\Core\Enum\SessionEnum;
 use VitesseCms\Core\Enum\UrlEnum;
 use VitesseCms\Core\Services\UrlService;
+use VitesseCms\Setting\Enum\SettingEnum;
+use VitesseCms\Setting\Services\SettingService;
 use VitesseCms\User\Enum\UserEnum;
 use VitesseCms\User\Forms\LoginForm;
 use VitesseCms\User\Models\User;
@@ -26,6 +28,7 @@ class IndexController extends AbstractControllerFrontend
     private Session $sessionService;
     private UserRepository $userRepository;
     private ItemRepository $itemRepository;
+    private SettingService $settingService;
 
     public function onConstruct()
     {
@@ -36,7 +39,7 @@ class IndexController extends AbstractControllerFrontend
         $this->sessionService = $this->eventsManager->fire(SessionEnum::ATTACH_SERVICE_LISTENER, new stdClass());
         $this->userRepository = $this->eventsManager->fire(UserEnum::GET_REPOSITORY, new stdClass());
         $this->itemRepository = $this->eventsManager->fire(ItemEnum::GET_REPOSITORY, new stdClass());
-
+        $this->settingService = $this->eventsManager->fire(SettingEnum::ATTACH_SERVICE_LISTENER, new stdClass());
     }
 
     public function indexAction(): void
@@ -54,7 +57,6 @@ class IndexController extends AbstractControllerFrontend
     public function loginAction(): void
     {
         $hasErrors = true;
-        $ajax = [];
         $return = null;
 
         if ($this->activeUser->isLoggedIn()) :
@@ -68,13 +70,11 @@ class IndexController extends AbstractControllerFrontend
                         $return = $this->handleForcedPasswordReset($user);
                         $hasErrors = false;
                     else :
-                        $password = $this->request->getPost('password');
                         $return = 'user/index';
-                        if ($this->securityService->checkHash($password, $user->_('password'))) :
+                        if ($this->securityService->checkHash($this->request->getPost('password'), $user->getPassword())) :
                             $this->sessionService->set('auth', ['id' => (string)$user->getId()]);
                             $this->eventsManager->fire(UserEnum::ON_LOGIN_SUCCESS_LISTENER, $user);
                             $this->flashService->setSucces('USER_LOGIN_SUCCESS');
-                            $ajax = ['successFunction' => 'refresh()'];
                             $hasErrors = false;
                         endif;
                     endif;
@@ -98,7 +98,7 @@ class IndexController extends AbstractControllerFrontend
             User::class,
             'Forced password reset for ' . $user->getEmail()
         );
-        $item = $this->itemRepository->getById($this->setting->get('USER_PAGE_PASSWORDFORCED'));
+        $item = $this->itemRepository->getById($this->settingService->get('USER_PAGE_PASSWORDFORCED'));
 
         return $this->urlService->getBaseUri() . $item->getSlug();
     }
