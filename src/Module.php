@@ -2,16 +2,15 @@
 
 namespace VitesseCms\User;
 
+use Phalcon\Di\DiInterface;
 use VitesseCms\Block\Repositories\BlockRepository;
 use VitesseCms\Content\Repositories\ItemRepository;
 use VitesseCms\Core\AbstractModule;
 use VitesseCms\Datafield\Repositories\DatafieldRepository;
 use VitesseCms\Datagroup\Repositories\DatagroupRepository;
-use VitesseCms\User\Repositories\BlockPositionRepository;
 use VitesseCms\User\Repositories\PermissionRoleRepository;
 use VitesseCms\User\Repositories\RepositoryCollection;
 use VitesseCms\User\Repositories\UserRepository;
-use Phalcon\Di\DiInterface;
 
 class Module extends AbstractModule
 {
@@ -22,7 +21,6 @@ class Module extends AbstractModule
             new UserRepository(),
             new ItemRepository(),
             new PermissionRoleRepository(),
-            new BlockPositionRepository(),
             new BlockRepository(),
             new DatagroupRepository(),
             new DatafieldRepository()

@@ -11,7 +11,6 @@ use VitesseCms\Datagroup\Repositories\DatagroupRepository;
  * @property ItemRepository $item
  * @property UserRepository $user
  * @property PermissionRoleRepository $permissionRole
- * @property BlockPositionRepository $blockPosition
  * @property BlockRepository $block
  * @property DatagroupRepository $datagroup
  * @property DatafieldRepository $datafield

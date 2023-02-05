@@ -26,7 +26,6 @@ class IndexController extends AbstractControllerFrontend
     private Session $sessionService;
     private UserRepository $userRepository;
     private ItemRepository $itemRepository;
-    private User $activeUser;
 
     public function onConstruct()
     {
@@ -37,7 +36,7 @@ class IndexController extends AbstractControllerFrontend
         $this->sessionService = $this->eventsManager->fire(SessionEnum::ATTACH_SERVICE_LISTENER, new stdClass());
         $this->userRepository = $this->eventsManager->fire(UserEnum::GET_REPOSITORY, new stdClass());
         $this->itemRepository = $this->eventsManager->fire(ItemEnum::GET_REPOSITORY, new stdClass());
-        $this->activeUser = $this->eventsManager->fire(UserEnum::GET_ACTIVE_USER_LISTENER, new stdClass());
+
     }
 
     public function indexAction(): void
@@ -45,7 +44,7 @@ class IndexController extends AbstractControllerFrontend
         if ($this->activeUser->isLoggedIn()) :
             $this->viewService->setVar('content', $this->eventsManager->fire(
                 BlockPositionEnum::RENDER_POSITION,
-                new RenderPositionDTO('myaccount', $this->activeUser->getRole())
+                new RenderPositionDTO('myaccount', [$this->activeUser->getRole()])
             ));
         else :
             $this->redirect('user/loginform', 401, 'Unauthorized');
