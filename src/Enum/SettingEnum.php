@@ -2,9 +2,7 @@
 
 namespace VitesseCms\User\Enum;
 
-use VitesseCms\Core\AbstractEnum;
-
-class SettingEnum extends AbstractEnum
+enum SettingEnum: string
 {
-    public const USER_DATAGROUP_PERSONALINFORMATION = 'USER_DATAGROUP_PERSONALINFORMATION';
+    case USER_DATAGROUP_PERSONALINFORMATION = 'USER_DATAGROUP_PERSONALINFORMATION';
 }

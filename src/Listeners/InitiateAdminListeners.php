@@ -16,7 +16,7 @@ class InitiateAdminListeners implements InitiateListenersInterface
 {
     public static function setListeners(InjectableInterface $di): void
     {
-        if ($di->user->getPermissionRole() === UserRoleEnum::SUPER_ADMIN) :
+        if (UserRoleEnum::isSuperAdmin($di->user->getPermissionRole())) :
             $di->eventsManager->attach('adminMenu', new AdminMenuPermissionListener());
         endif;
         $di->eventsManager->attach('adminMenu', new AdminMenuListener());

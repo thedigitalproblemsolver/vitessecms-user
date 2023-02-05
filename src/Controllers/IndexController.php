@@ -37,9 +37,9 @@ class IndexController extends AbstractControllerFrontend
         $this->urlService = $this->eventsManager->fire(UrlEnum::ATTACH_SERVICE_LISTENER, new stdClass());
         $this->securityService = $this->eventsManager->fire(SecurityEnum::ATTACH_SERVICE_LISTENER, new stdClass());
         $this->sessionService = $this->eventsManager->fire(SessionEnum::ATTACH_SERVICE_LISTENER, new stdClass());
-        $this->userRepository = $this->eventsManager->fire(UserEnum::GET_REPOSITORY, new stdClass());
+        $this->userRepository = $this->eventsManager->fire(UserEnum::GET_REPOSITORY->value, new stdClass());
         $this->itemRepository = $this->eventsManager->fire(ItemEnum::GET_REPOSITORY, new stdClass());
-        $this->settingService = $this->eventsManager->fire(SettingEnum::ATTACH_SERVICE_LISTENER, new stdClass());
+        $this->settingService = $this->eventsManager->fire(SettingEnum::ATTACH_SERVICE_LISTENER->value, new stdClass());
     }
 
     public function indexAction(): void
@@ -73,7 +73,7 @@ class IndexController extends AbstractControllerFrontend
                         $return = 'user/index';
                         if ($this->securityService->checkHash($this->request->getPost('password'), $user->getPassword())) :
                             $this->sessionService->set('auth', ['id' => (string)$user->getId()]);
-                            $this->eventsManager->fire(UserEnum::ON_LOGIN_SUCCESS_LISTENER, $user);
+                            $this->eventsManager->fire(UserEnum::ON_LOGIN_SUCCESS_LISTENER->value, $user);
                             $this->flashService->setSucces('USER_LOGIN_SUCCESS');
                             $hasErrors = false;
                         endif;

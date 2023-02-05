@@ -16,13 +16,13 @@ class InitiateListeners implements InitiateListenersInterface
 {
     public static function setListeners(InjectableInterface $di): void
     {
-        if ($di->user->getPermissionRole() === UserRoleEnum::SUPER_ADMIN) :
+        if (UserRoleEnum::isSuperAdmin($di->user->getPermissionRole())) :
             $di->eventsManager->attach('adminMenu', new AdminMenuPermissionListener());
         endif;
         if ($di->user->hasAdminAccess()) :
             $di->eventsManager->attach('adminMenu', new AdminMenuListener());
         endif;
-        $di->eventsManager->attach(UserEnum::SERVICE_LISTENER, new UserListener($di->user, new UserRepository()));
-        $di->eventsManager->attach(AclEnum::SERVICE_LISTENER, new AclServiceListener($di->acl));
+        $di->eventsManager->attach(UserEnum::SERVICE_LISTENER->value, new UserListener($di->user, new UserRepository()));
+        $di->eventsManager->attach(AclEnum::SERVICE_LISTENER->value, new AclServiceListener($di->acl));
     }
 }

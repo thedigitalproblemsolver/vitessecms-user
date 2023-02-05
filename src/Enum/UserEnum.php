@@ -2,13 +2,11 @@
 
 namespace VitesseCms\User\Enum;
 
-use VitesseCms\Core\AbstractEnum;
-
-class UserEnum extends AbstractEnum
+enum UserEnum: string
 {
-    public const ON_LOGIN_SUCCESS_LISTENER = 'user:onLoginSuccess';
-    public const SERVICE_LISTENER = 'UserListener';
-    public const GET_ACTIVE_USER_LISTENER = 'UserListener:getActiveUser';
-    public const GET_REPOSITORY = 'UserListener:getRepository';
+    case ON_LOGIN_SUCCESS_LISTENER = 'user:onLoginSuccess';
+    case SERVICE_LISTENER = 'UserListener';
+    case GET_ACTIVE_USER_LISTENER = 'UserListener:getActiveUser';
+    case GET_REPOSITORY = 'UserListener:getRepository';
 
 }

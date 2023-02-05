@@ -2,10 +2,8 @@
 
 namespace VitesseCms\User\Enum;
 
-use VitesseCms\Core\AbstractEnum;
-
-class AclEnum extends AbstractEnum
+enum AclEnum: string
 {
-    public const SERVICE_LISTENER = 'AclListener';
-    public const ATTACH_SERVICE_LISTENER = 'AclListener:attach';
+    case SERVICE_LISTENER = 'AclListener';
+    case ATTACH_SERVICE_LISTENER = 'AclListener:attach';
 }
