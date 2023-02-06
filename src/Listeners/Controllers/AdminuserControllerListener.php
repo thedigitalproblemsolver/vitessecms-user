@@ -7,7 +7,7 @@ use VitesseCms\Admin\Forms\AdminlistFormInterface;
 use VitesseCms\Form\Helpers\ElementHelper;
 use VitesseCms\Form\Models\Attributes;
 use VitesseCms\User\Controllers\AdminuserController;
-use VitesseCms\User\Enum\SettingEnum;
+use VitesseCms\User\Enum\SettingsEnum;
 use VitesseCms\User\Enum\UserRoleEnum;
 use VitesseCms\User\Models\User;
 
@@ -23,9 +23,9 @@ class AdminuserControllerListener
             $user->setPassword($controller->security->hash($controller->request->getPost('new_password')));
         endif;
 
-        if ($controller->setting->has(SettingEnum::USER_DATAGROUP_PERSONALINFORMATION->value)) :
+        if ($controller->setting->has(SettingsEnum::USER_DATAGROUP_PERSONALINFORMATION->name)) :
             $datagroup = $controller->repositories->datagroup->getById(
-                $controller->setting->get(SettingEnum::USER_DATAGROUP_PERSONALINFORMATION->value)
+                $controller->setting->get(SettingsEnum::USER_DATAGROUP_PERSONALINFORMATION->name)
             );
             foreach ($datagroup->getDatafields() as $datafieldObject) :
                 $datafield = $controller->repositories->datafield->getById($datafieldObject['id']);

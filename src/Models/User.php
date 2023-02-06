@@ -5,7 +5,7 @@ namespace VitesseCms\User\Models;
 use VitesseCms\Database\AbstractCollection;
 use VitesseCms\Datafield\Repositories\DatafieldRepository;
 use VitesseCms\Datagroup\Models\Datagroup;
-use VitesseCms\User\Enum\SettingEnum;
+use VitesseCms\User\Enum\SettingsEnum;
 use VitesseCms\User\Enum\UserRoleEnum;
 use VitesseCms\User\Factories\UserFactory;
 
@@ -108,9 +108,9 @@ class User extends AbstractCollection
 
     public function addPersonalInformation(array $data): User
     {
-        if ($this->di->setting->has(SettingEnum::USER_DATAGROUP_PERSONALINFORMATION->value)) :
+        if ($this->di->setting->has(SettingsEnum::USER_DATAGROUP_PERSONALINFORMATION->name)) :
             /** @var Datagroup $datagroup */
-            $datagroup = Datagroup::findById($this->di->setting->get(SettingEnum::USER_DATAGROUP_PERSONALINFORMATION->value));
+            $datagroup = Datagroup::findById($this->di->setting->get(SettingsEnum::USER_DATAGROUP_PERSONALINFORMATION->name));
             if ($datagroup) :
                 UserFactory::bindByDatagroup($datagroup, $data, $this, new DatafieldRepository());
             endif;

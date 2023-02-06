@@ -16,6 +16,8 @@ use VitesseCms\Core\Enum\UrlEnum;
 use VitesseCms\Core\Services\UrlService;
 use VitesseCms\Setting\Enum\SettingEnum;
 use VitesseCms\Setting\Services\SettingService;
+use VitesseCms\User\Enum\SettingsEnum;
+use VitesseCms\User\Enum\TranslationEnum;
 use VitesseCms\User\Enum\UserEnum;
 use VitesseCms\User\Forms\LoginForm;
 use VitesseCms\User\Models\User;
@@ -60,7 +62,7 @@ class IndexController extends AbstractControllerFrontend
         $return = null;
 
         if ($this->activeUser->isLoggedIn()) :
-            $this->redirect('user/index');
+            $this->redirect($this->urlService->getBaseUri() . 'user/index');
         else :
             $loginForm = new LoginForm();
             if ($loginForm->validate()) :
@@ -70,11 +72,11 @@ class IndexController extends AbstractControllerFrontend
                         $return = $this->handleForcedPasswordReset($user);
                         $hasErrors = false;
                     else :
-                        $return = 'user/index';
+                        $return = $this->urlService->getBaseUri() . 'user/index';
                         if ($this->securityService->checkHash($this->request->getPost('password'), $user->getPassword())) :
                             $this->sessionService->set('auth', ['id' => (string)$user->getId()]);
                             $this->eventsManager->fire(UserEnum::ON_LOGIN_SUCCESS_LISTENER->value, $user);
-                            $this->flashService->setSucces('USER_LOGIN_SUCCESS');
+                            $this->flashService->setSucces(TranslationEnum::USER_LOGIN_SUCCESS->name);
                             $hasErrors = false;
                         endif;
                     endif;
@@ -84,7 +86,7 @@ class IndexController extends AbstractControllerFrontend
             endif;
 
             if ($hasErrors) :
-                $this->flashService->setError('USER_LOGIN_FAILED');
+                $this->flashService->setError(TranslationEnum::USER_LOGIN_FAILED->name);
             endif;
 
             $this->redirect($return);
@@ -98,7 +100,7 @@ class IndexController extends AbstractControllerFrontend
             User::class,
             'Forced password reset for ' . $user->getEmail()
         );
-        $item = $this->itemRepository->getById($this->settingService->get('USER_PAGE_PASSWORDFORCED'));
+        $item = $this->itemRepository->getById($this->settingService->get(SettingsEnum::USER_PAGE_PASSWORDFORGOTEMAIL->name));
 
         return $this->urlService->getBaseUri() . $item->getSlug();
     }
@@ -106,16 +108,19 @@ class IndexController extends AbstractControllerFrontend
     public function logoutAction(): void
     {
         $this->sessionService->destroy();
-        $this->flashService->setSucces('USER_LOGOUT_SUCCESS');
+        $this->flashService->setSucces(TranslationEnum::USER_LOGOUT_SUCCESS->name);
         $this->redirect('/');
     }
 
     public function loginformAction(): void
     {
         if ($this->activeUser->isLoggedIn()) :
-            $this->redirect('user/index');
+            $this->redirect($this->urlService->getBaseUri() . 'user/index');
         else :
-            $this->viewService->set('content', (new LoginForm())->renderForm('user/login', 'login'));
+            $this->viewService->set(
+                'content',
+                (new LoginForm())->renderForm($this->urlService->getBaseUri() . 'user/login', 'login')
+            );
         endif;
     }
 }
