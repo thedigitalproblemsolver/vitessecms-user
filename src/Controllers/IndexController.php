@@ -12,8 +12,6 @@ use VitesseCms\Content\Repositories\ItemRepository;
 use VitesseCms\Core\AbstractControllerFrontend;
 use VitesseCms\Core\Enum\SecurityEnum;
 use VitesseCms\Core\Enum\SessionEnum;
-use VitesseCms\Core\Enum\UrlEnum;
-use VitesseCms\Core\Services\UrlService;
 use VitesseCms\Setting\Enum\SettingEnum;
 use VitesseCms\Setting\Services\SettingService;
 use VitesseCms\User\Enum\SettingsEnum;
@@ -25,7 +23,6 @@ use VitesseCms\User\Repositories\UserRepository;
 
 class IndexController extends AbstractControllerFrontend
 {
-    private UrlService $urlService;
     private Security $securityService;
     private Session $sessionService;
     private UserRepository $userRepository;
@@ -36,7 +33,6 @@ class IndexController extends AbstractControllerFrontend
     {
         parent::onConstruct();
 
-        $this->urlService = $this->eventsManager->fire(UrlEnum::ATTACH_SERVICE_LISTENER, new stdClass());
         $this->securityService = $this->eventsManager->fire(SecurityEnum::ATTACH_SERVICE_LISTENER, new stdClass());
         $this->sessionService = $this->eventsManager->fire(SessionEnum::ATTACH_SERVICE_LISTENER, new stdClass());
         $this->userRepository = $this->eventsManager->fire(UserEnum::GET_REPOSITORY->value, new stdClass());
@@ -52,7 +48,7 @@ class IndexController extends AbstractControllerFrontend
                 new RenderPositionDTO('myaccount', [$this->activeUser->getRole()])
             ));
         else :
-            $this->redirect('user/loginform', 401, 'Unauthorized');
+            $this->redirect($this->urlService->getBaseUri() . 'user/loginform', 401, 'Unauthorized');
         endif;
     }
 
@@ -109,7 +105,7 @@ class IndexController extends AbstractControllerFrontend
     {
         $this->sessionService->destroy();
         $this->flashService->setSucces(TranslationEnum::USER_LOGOUT_SUCCESS->name);
-        $this->redirect('/');
+        $this->redirect($this->urlService->getBaseUri());
     }
 
     public function loginformAction(): void
