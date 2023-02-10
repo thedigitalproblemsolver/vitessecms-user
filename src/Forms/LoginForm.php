@@ -2,9 +2,9 @@
 
 namespace VitesseCms\User\Forms;
 
+use Phalcon\Tag;
 use VitesseCms\Form\AbstractForm;
 use VitesseCms\Form\Models\Attributes;
-use Phalcon\Tag;
 
 class LoginForm extends AbstractForm
 {
@@ -21,7 +21,7 @@ class LoginForm extends AbstractForm
         )->addSubmitButton('%USER_LOGIN%')
             ->addHtml(
                 Tag::linkTo([
-                        'action' => 'user/password/forgotForm',
+                        'action' => $this->url->getBaseUri() . 'user/password/forgotForm',
                         'text' => '%USER_FORGOT_PASSWORD%',
                         'class' => 'openmodal',
                     ]
