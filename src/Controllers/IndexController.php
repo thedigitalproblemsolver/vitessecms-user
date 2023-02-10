@@ -2,107 +2,121 @@
 
 namespace VitesseCms\User\Controllers;
 
-use VitesseCms\Block\Enum\BlockEnum;
-use VitesseCms\Core\AbstractController;
-use VitesseCms\Core\Factories\ObjectFactory;
+use Phalcon\Encryption\Security;
+use Phalcon\Session\Manager as Session;
+use stdClass;
+use VitesseCms\Block\DTO\RenderPositionDTO;
+use VitesseCms\Block\Enum\BlockPositionEnum;
+use VitesseCms\Content\Enum\ItemEnum;
+use VitesseCms\Content\Repositories\ItemRepository;
+use VitesseCms\Core\AbstractControllerFrontend;
+use VitesseCms\Core\Enum\SecurityEnum;
+use VitesseCms\Core\Enum\SessionEnum;
+use VitesseCms\Setting\Enum\SettingEnum;
+use VitesseCms\Setting\Services\SettingService;
+use VitesseCms\User\Enum\SettingsEnum;
+use VitesseCms\User\Enum\TranslationEnum;
+use VitesseCms\User\Enum\UserEnum;
 use VitesseCms\User\Forms\LoginForm;
-use VitesseCms\User\Repositories\RepositoriesInterface;
 use VitesseCms\User\Models\User;
+use VitesseCms\User\Repositories\UserRepository;
 
-class IndexController extends AbstractController implements RepositoriesInterface
+class IndexController extends AbstractControllerFrontend
 {
+    private Security $securityService;
+    private Session $sessionService;
+    private UserRepository $userRepository;
+    private ItemRepository $itemRepository;
+    private SettingService $settingService;
+
+    public function onConstruct()
+    {
+        parent::onConstruct();
+
+        $this->securityService = $this->eventsManager->fire(SecurityEnum::ATTACH_SERVICE_LISTENER, new stdClass());
+        $this->sessionService = $this->eventsManager->fire(SessionEnum::ATTACH_SERVICE_LISTENER, new stdClass());
+        $this->userRepository = $this->eventsManager->fire(UserEnum::GET_REPOSITORY->value, new stdClass());
+        $this->itemRepository = $this->eventsManager->fire(ItemEnum::GET_REPOSITORY, new stdClass());
+        $this->settingService = $this->eventsManager->fire(SettingEnum::ATTACH_SERVICE_LISTENER->value, new stdClass());
+    }
+
     public function indexAction(): void
     {
-        if ($this->user->isLoggedIn()) :
-            $tabs = [];
-            $blockPositions = $this->repositories->blockPosition->getByMyAccountPosition($this->user->getRole());
-            while ($blockPositions->valid()) :
-                $blockPosition = $blockPositions->current();
-                $block = $this->repositories->block->getById($blockPosition->getBlock());
-                $tmp = [
-                    'id' => $block->getId(),
-                    'name' => $block->getNameField(),
-                    'content' => $this->eventsManager->fire(BlockEnum::BLOCK_LISTENER . ':renderBlock', $block)
-                ];
-                $tabs[] = $tmp;
-                $blockPositions->next();
-            endwhile;
-
-            $block = ObjectFactory::create();
-            $block->set('items', $tabs);
-
-            $this->view->setVar('content', $this->view->renderTemplate(
-                'scrollspy',
-                'partials/bootstrap',
-                ['block' => $block]
+        if ($this->activeUser->isLoggedIn()) :
+            $this->viewService->setVar('content', $this->eventsManager->fire(
+                BlockPositionEnum::RENDER_POSITION,
+                new RenderPositionDTO('myaccount', [$this->activeUser->getRole()])
             ));
-            $this->prepareView();
         else :
-            $this->redirect('user/loginform');
+            $this->redirect($this->urlService->getBaseUri() . 'user/loginform', 401, 'Unauthorized');
         endif;
     }
 
     public function loginAction(): void
     {
         $hasErrors = true;
-        $ajax = [];
         $return = null;
 
-        if ($this->user->isLoggedIn()) :
-            $this->redirect('user/index', [], true, true);
+        if ($this->activeUser->isLoggedIn()) :
+            $this->redirect($this->urlService->getBaseUri() . 'user/index');
         else :
             $loginForm = new LoginForm();
-            if ($loginForm->validate($this)) :
-                $user = $this->repositories->user->getByEmail($this->request->getPost('email'));
+            if ($loginForm->validate()) :
+                $user = $this->userRepository->getByEmail($this->request->getPost('email'));
                 if ($user) :
                     if ($user->hasForcedPasswordReset()) :
-                        $this->log->write(
-                            $user->getId(),
-                            User::class,
-                            'Forced password reset for ' . $user->_('email')
-                        );
-                        $item = $this->repositories->item->getById($this->setting->get('USER_PAGE_PASSWORDFORCED'));
-                        $return = $this->url->getBaseUri() . $item->getSlug();
+                        $return = $this->handleForcedPasswordReset($user);
                         $hasErrors = false;
                     else :
-                        $password = $this->request->getPost('password');
-                        $return = 'user/index';
-                        if ($this->security->checkHash($password, $user->_('password'))) :
-                            $this->session->set('auth', ['id' => (string)$user->getId()]);
-                            $this->eventsManager->fire('user:onLoginSuccess', $user);
-                            $this->flash->setSucces('USER_LOGIN_SUCCESS');
-                            $ajax = ['successFunction' => 'refresh()'];
+                        $return = $this->urlService->getBaseUri() . 'user/index';
+                        if ($this->securityService->checkHash($this->request->getPost('password'), $user->getPassword())) :
+                            $this->sessionService->set('auth', ['id' => (string)$user->getId()]);
+                            $this->eventsManager->fire(UserEnum::ON_LOGIN_SUCCESS_LISTENER->value, $user);
+                            $this->flashService->setSucces(TranslationEnum::USER_LOGIN_SUCCESS->name);
                             $hasErrors = false;
                         endif;
                     endif;
                 else :
-                    $this->security->hash(mt_rand());
+                    $this->securityService->hash(uniqid());
                 endif;
             endif;
 
             if ($hasErrors) :
-                $this->flash->setError('USER_LOGIN_FAILED');
+                $this->flashService->setError(TranslationEnum::USER_LOGIN_FAILED->name);
             endif;
 
-            $this->redirect($return, $ajax, true, true);
+            $this->redirect($return);
         endif;
+    }
+
+    private function handleForcedPasswordReset(User $user): string
+    {
+        $this->logService->write(
+            $user->getId(),
+            User::class,
+            'Forced password reset for ' . $user->getEmail()
+        );
+        $item = $this->itemRepository->getById($this->settingService->get(SettingsEnum::USER_PAGE_PASSWORDFORGOTEMAIL->name));
+
+        return $this->urlService->getBaseUri() . $item->getSlug();
     }
 
     public function logoutAction(): void
     {
-        $this->session->destroy();
-        $this->flash->setSucces('USER_LOGOUT_SUCCESS');
-
-        $this->redirect('/');
+        $this->sessionService->destroy();
+        $this->flashService->setSucces(TranslationEnum::USER_LOGOUT_SUCCESS->name);
+        $this->redirect($this->urlService->getBaseUri());
     }
 
     public function loginformAction(): void
     {
-        if ($this->user->isLoggedIn()) :
-            $this->redirect('user/index', [], true, true);
+        if ($this->activeUser->isLoggedIn()) :
+            $this->redirect($this->urlService->getBaseUri() . 'user/index');
         else :
-            $this->view->set('content', (new LoginForm())->renderForm('user/login', 'login'));
+            $this->viewService->set(
+                'content',
+                (new LoginForm())->renderForm($this->urlService->getBaseUri() . 'user/login', 'login')
+            );
         endif;
-        $this->prepareView();
     }
 }

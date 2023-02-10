@@ -22,7 +22,7 @@ class UserForm extends AbstractFormWithRepository
                     )
             )->addToggle('%USER_PASSWORD_FORCED_RESET%', 'forcePasswordReset');
 
-        if ($this->user->getPermissionRole() === UserRoleEnum::SUPER_ADMIN) :
+        if ($this->user->getPermissionRole() === UserRoleEnum::SUPER_ADMIN->value) :
             $this->addPassword('%USER_PASSWORD%', 'new_password');
         endif;
 

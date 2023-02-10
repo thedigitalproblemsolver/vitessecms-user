@@ -8,28 +8,21 @@ use VitesseCms\User\Utils\PermissionUtils;
 
 class AclService
 {
-    /**
-     * @var User
-     */
-    protected $user;
-
-    /**
-     * @var RouterService
-     */
-    protected $router;
+    private User $activeUser;
+    private RouterService $routerService;
 
     public function __construct(User $user, RouterService $routerService)
     {
-        $this->user = $user;
-        $this->router = $routerService;
+        $this->activeUser = $user;
+        $this->routerService = $routerService;
     }
 
     public function hasAccess(string $function): bool
     {
         return PermissionUtils::check(
-            $this->user,
-            $this->router->getModulePrefix() . $this->router->getModuleName(),
-            $this->router->getControllerName(),
+            $this->activeUser,
+            $this->routerService->getModulePrefix() . $this->routerService->getModuleName(),
+            $this->routerService->getControllerName(),
             $function
         );
     }

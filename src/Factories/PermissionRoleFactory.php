@@ -9,17 +9,17 @@ class PermissionRoleFactory
     public static function create(
         string $name,
         string $calling_name,
-        bool $published = false,
-        bool $adminAccess = false,
+        bool   $published = false,
+        bool   $adminAccess = false,
         string $parentId = null
     ): PermissionRole
     {
         $permission = new PermissionRole();
         $permission->set('name', $name, true);
-        $permission->setCallingName( $calling_name);
+        $permission->setCallingName($calling_name);
         $permission->setPublished($published);
         $permission->setAdminAccess($adminAccess);
-        $permission->setParent('parentId');
+        $permission->setParent($parentId);
 
         return $permission;
     }
