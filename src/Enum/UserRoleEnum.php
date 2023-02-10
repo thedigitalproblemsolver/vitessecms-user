@@ -2,10 +2,14 @@
 
 namespace VitesseCms\User\Enum;
 
-use VitesseCms\Core\AbstractEnum;
-
-class UserRoleEnum extends AbstractEnum
+enum UserRoleEnum: string
 {
-    public const GUEST = 'guest';
-    public const SUPER_ADMIN = 'superadmin';
+    case GUEST = 'guest';
+    case SUPER_ADMIN = 'superadmin';
+    case REGISTERED = 'registered';
+
+    public static function isSuperAdmin(string $role): bool
+    {
+        return $role === self::SUPER_ADMIN->value;
+    }
 }

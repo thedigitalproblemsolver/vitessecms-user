@@ -35,7 +35,7 @@ class UserFactory
     {
         $permissionRoleRepository = new PermissionRoleRepository();
         $guestRole = $permissionRoleRepository->findFirst(new FindValueIterator(
-            [new FindValue('calling_name', UserRoleEnum::GUEST)]
+            [new FindValue('calling_name', UserRoleEnum::GUEST->value)]
         ));
         $user = new User();
         if ($guestRole !== null) :

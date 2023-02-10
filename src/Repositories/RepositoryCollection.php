@@ -26,11 +26,6 @@ class RepositoryCollection implements RepositoriesInterface, BaseRepositoriesInt
     public $permissionRole;
 
     /**
-     * @var BlockPositionRepository
-     */
-    public $blockPosition;
-
-    /**
      * @var BlockRepository
      */
     public $block;
@@ -49,7 +44,6 @@ class RepositoryCollection implements RepositoriesInterface, BaseRepositoriesInt
         UserRepository           $userRepository,
         ItemRepository           $itemRepository,
         PermissionRoleRepository $permissionRoleRepository,
-        BlockPositionRepository  $blockPositionRepository,
         BlockRepository          $blockRepository,
         DatagroupRepository      $datagroupRepository,
         DatafieldRepository      $datafieldRepository
@@ -58,7 +52,6 @@ class RepositoryCollection implements RepositoriesInterface, BaseRepositoriesInt
         $this->user = $userRepository;
         $this->item = $itemRepository;
         $this->permissionRole = $permissionRoleRepository;
-        $this->blockPosition = $blockPositionRepository;
         $this->block = $blockRepository;
         $this->datagroup = $datagroupRepository;
         $this->datafield = $datafieldRepository;

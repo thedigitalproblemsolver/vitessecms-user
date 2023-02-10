@@ -2,7 +2,7 @@
 
 namespace VitesseCms\User\Factories;
 
-use Phalcon\Security\Random;
+use Phalcon\Encryption\Security\Random;
 use VitesseCms\Core\Factories\ObjectFactory;
 use VitesseCms\Core\Interfaces\BaseObjectInterface;
 

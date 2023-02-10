@@ -5,7 +5,8 @@ namespace VitesseCms\User\Models;
 use VitesseCms\Database\AbstractCollection;
 use VitesseCms\Datafield\Repositories\DatafieldRepository;
 use VitesseCms\Datagroup\Models\Datagroup;
-use VitesseCms\User\Enum\SettingEnum;
+use VitesseCms\User\Enum\SettingsEnum;
+use VitesseCms\User\Enum\UserRoleEnum;
 use VitesseCms\User\Factories\UserFactory;
 
 class User extends AbstractCollection
@@ -19,13 +20,13 @@ class User extends AbstractCollection
      */
     public $role;
     /**
-     * @var null
-     */
-    protected $permissionRole;
-    /**
      * @var bool
      */
     public $forcePasswordReset;
+    /**
+     * @var null
+     */
+    protected $permissionRole;
     /**
      * @var bool
      */
@@ -37,7 +38,7 @@ class User extends AbstractCollection
 
     public function afterFetch()
     {
-        $this->set('name', $this->_('email'));
+        $this->set('name', $this->getEmail());
 
         parent::afterFetch();
     }
@@ -45,14 +46,6 @@ class User extends AbstractCollection
     public function getEmail(): ?string
     {
         return $this->email;
-    }
-
-    /**
-     * @deprecated should use isLoggedIn
-     */
-    public function loggedIn(): bool
-    {
-        return $this->isLoggedIn();
     }
 
     public function isLoggedIn(): bool
@@ -73,7 +66,7 @@ class User extends AbstractCollection
 
             if (
                 $this->permissionRole->_('adminAccess')
-                || 'superadmin' === $this->getPermissionRole()
+                || UserRoleEnum::isSuperAdmin($this->getPermissionRole())
             ) :
                 return true;
             endif;
@@ -92,13 +85,13 @@ class User extends AbstractCollection
             return $this->permissionRole->_('calling_name');
         endif;
 
-        return 'guest';
+        return UserRoleEnum::GUEST->value;
     }
 
     public function createLogin(string $email, string $password, string $role = null): User
     {
         if ($role === null) :
-            $role = 'registered';
+            $role = UserRoleEnum::REGISTERED->value;
         endif;
         PermissionRole::setFindValue('calling_name', $role);
         $role = PermissionRole::findFirst();
@@ -115,9 +108,9 @@ class User extends AbstractCollection
 
     public function addPersonalInformation(array $data): User
     {
-        if ($this->di->setting->has(SettingEnum::USER_DATAGROUP_PERSONALINFORMATION)) :
+        if ($this->di->setting->has(SettingsEnum::USER_DATAGROUP_PERSONALINFORMATION->name)) :
             /** @var Datagroup $datagroup */
-            $datagroup = Datagroup::findById($this->di->setting->get(SettingEnum::USER_DATAGROUP_PERSONALINFORMATION));
+            $datagroup = Datagroup::findById($this->di->setting->get(SettingsEnum::USER_DATAGROUP_PERSONALINFORMATION->name));
             if ($datagroup) :
                 UserFactory::bindByDatagroup($datagroup, $data, $this, new DatafieldRepository());
             endif;
@@ -145,11 +138,9 @@ class User extends AbstractCollection
         return $this;
     }
 
-    public function setPassword(string $password): User
+    public function getRole(): string
     {
-        $this->password = $password;
-
-        return $this;
+        return $this->role;
     }
 
     public function setRole(string $role): User
@@ -159,8 +150,15 @@ class User extends AbstractCollection
         return $this;
     }
 
-    public function getRole(): string
+    public function getPassword(): string
     {
-        return $this->role;
+        return $this->password;
+    }
+
+    public function setPassword(string $password): User
+    {
+        $this->password = $password;
+
+        return $this;
     }
 }
