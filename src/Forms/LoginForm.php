@@ -21,7 +21,7 @@ class LoginForm extends AbstractForm
         )->addSubmitButton('%USER_LOGIN%')
             ->addHtml(
                 Tag::linkTo([
-                        'action' => $this->url->getBaseUri() . 'user/password/forgotForm',
+                        'action' => 'user/password/forgotForm',
                         'text' => '%USER_FORGOT_PASSWORD%',
                         'class' => 'openmodal',
                     ]
