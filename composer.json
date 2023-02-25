@@ -22,7 +22,7 @@
     "ext-phalcon": "5.1.4",
     "vitessecms/content": "~0.4.4",
     "vitessecms/block": "~0.4.3",
-    "vitessecms/core": "~0.4.6",
+    "vitessecms/core": "~0.4.7",
     "vitessecms/form": "~0.4.3",
     "vitessecms/datafield": "~0.3.3",
     "vitessecms/datagroup": "~0.4.1"
