@@ -2,10 +2,14 @@
   "name": "vitessecms/user",
   "type": "library",
   "description": "User module for VitesseCms",
-  "keywords": ["php","phalcon","vitessecms"],
+  "keywords": [
+    "php",
+    "phalcon",
+    "vitessecms"
+  ],
   "homepage": "https://github.com/thedigitalproblemsolver/VitesseCMS",
   "license": "GPL-2.0-or-later",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "authors": [
     {
       "name": "Jasper Jaklofsky",
@@ -20,11 +24,11 @@
   "require": {
     "php": ">=8.1",
     "ext-phalcon": "5.1.4",
-    "vitessecms/content": "~0.4.0",
-    "vitessecms/block": "~0.4.1",
-    "vitessecms/core": "~0.4.2",
-    "vitessecms/form": "~0.4.1",
-    "vitessecms/datafield": "~0.3.1",
-    "vitessecms/datagroup": "~0.4.0"
+    "vitessecms/content": "~0.5.0",
+    "vitessecms/block": "~0.5.0",
+    "vitessecms/core": "~0.5.0",
+    "vitessecms/form": "~0.4.4",
+    "vitessecms/datafield": "~0.3.3",
+    "vitessecms/datagroup": "~0.4.1"
   }
 }
