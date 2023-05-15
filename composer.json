@@ -25,8 +25,8 @@
     "php": ">=8.1",
     "ext-phalcon": "5.1.4",
     "vitessecms/content": "~0.5.1",
-    "vitessecms/block": "~0.5.0",
-    "vitessecms/core": "~0.5.0",
+    "vitessecms/block": "~0.5.1",
+    "vitessecms/core": "~0.5.1",
     "vitessecms/form": "~0.4.5",
     "vitessecms/datafield": "~0.3.4",
     "vitessecms/datagroup": "~0.4.2"
