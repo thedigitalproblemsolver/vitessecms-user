@@ -10,9 +10,16 @@ use VitesseCms\User\Controllers\AdminuserController;
 use VitesseCms\User\Enum\SettingsEnum;
 use VitesseCms\User\Enum\UserRoleEnum;
 use VitesseCms\User\Models\User;
+use VitesseCms\User\Repositories\PermissionRoleRepository;
 
 class AdminuserControllerListener
 {
+    public function __construct(
+        private readonly PermissionRoleRepository $permissionRoleRepository
+    )
+    {
+    }
+
     public function beforeModelSave(Event $event, AdminuserController $controller, User $user): void
     {
         if (
@@ -36,7 +43,7 @@ class AdminuserControllerListener
         endif;
     }
 
-    public function adminListFilter(Event $event, AdminuserController $controller, AdminlistFormInterface $form): string
+    public function adminListFilter(Event $event, AdminuserController $controller, AdminlistFormInterface $form): void
     {
         $form->addNameField($form);
         $form->addPublishedField($form);
@@ -46,13 +53,8 @@ class AdminuserControllerListener
                 'User role',
                 'filter[role]',
                 (new Attributes())->setOptions(
-                    ElementHelper::modelIteratorToOptions($controller->repositories->permissionRole->findAll())
+                    ElementHelper::modelIteratorToOptions($this->permissionRoleRepository->findAll())
                 )
             );
-
-        return $form->renderForm(
-            $controller->getLink() . '/' . $controller->router->getActionName(),
-            'adminFilter'
-        );
     }
 }

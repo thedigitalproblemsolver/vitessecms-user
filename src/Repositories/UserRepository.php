@@ -2,6 +2,8 @@
 
 namespace VitesseCms\User\Repositories;
 
+use VitesseCms\Database\Models\FindOrderIterator;
+use VitesseCms\Database\Models\FindValueIterator;
 use VitesseCms\User\Models\User;
 use VitesseCms\User\Models\UserIterator;
 
@@ -48,8 +50,8 @@ class UserRepository
 
     public function findAll(
         ?FindValueIterator $findValues = null,
-        bool $hideUnpublished = true,
-        ?int $limit = null,
+        bool               $hideUnpublished = true,
+        ?int               $limit = null,
         ?FindOrderIterator $findOrders = null
     ): UserIterator
     {
