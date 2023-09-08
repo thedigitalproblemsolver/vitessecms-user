@@ -4,6 +4,8 @@ namespace VitesseCms\User\Listeners;
 
 use VitesseCms\Core\Interfaces\InitiateListenersInterface;
 use VitesseCms\Core\Interfaces\InjectableInterface;
+use VitesseCms\Datafield\Repositories\DatafieldRepository;
+use VitesseCms\Datagroup\Repositories\DatagroupRepository;
 use VitesseCms\User\Controllers\AdminpermissionroleController;
 use VitesseCms\User\Controllers\AdminuserController;
 use VitesseCms\User\Enum\AclEnum;
@@ -28,7 +30,15 @@ class InitiateAdminListeners implements InitiateListenersInterface
         endif;
         $di->eventsManager->attach('adminMenu', new AdminMenuListener());
         $di->eventsManager->attach(AdminuserController::class, new AdminuserControllerListener(
-            new PermissionRoleRepository()
+            new PermissionRoleRepository(),
+            $di->user,
+            $di->flash,
+            $di->request,
+            $di->security,
+            $di->setting,
+            $di->eventsManager,
+            new DatagroupRepository(),
+            new DatafieldRepository()
         ));
         $di->eventsManager->attach(AdminpermissionroleController::class, new AdminpermissionroleControllerListener());
         $di->eventsManager->attach(AclEnum::SERVICE_LISTENER->value, new AclServiceListener($di->acl));
