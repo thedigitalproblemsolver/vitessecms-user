@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace VitesseCms\User\Forms;
@@ -36,6 +37,7 @@ class UserForm extends AbstractForm implements AdminModelFormInterface
 
     public function buildForm(): void
     {
+        $this->addEmail('%CORE_NAME%', 'name', (new Attributes())->setRequired());
         $this->addEmail('%CORE_EMAIL%', 'email', (new Attributes())->setRequired())
             ->addDropdown(
                 '%ADMIN_ROLE%',
