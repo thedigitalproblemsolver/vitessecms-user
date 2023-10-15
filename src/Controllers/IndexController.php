@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace VitesseCms\User\Controllers;
 
@@ -43,10 +45,13 @@ class IndexController extends AbstractControllerFrontend
     public function indexAction(): void
     {
         if ($this->activeUser->isLoggedIn()) :
-            $this->viewService->setVar('content', $this->eventsManager->fire(
-                BlockPositionEnum::RENDER_POSITION,
-                new RenderPositionDTO('myaccount', [$this->activeUser->getRole()])
-            ));
+            $this->viewService->setVar(
+                'content',
+                $this->eventsManager->fire(
+                    BlockPositionEnum::RENDER_POSITION,
+                    new RenderPositionDTO('myaccount', [$this->activeUser->getRole()])
+                )
+            );
         else :
             $this->redirect($this->urlService->getBaseUri() . 'user/loginform', 401, 'Unauthorized');
         endif;
@@ -69,7 +74,10 @@ class IndexController extends AbstractControllerFrontend
                         $hasErrors = false;
                     else :
                         $return = $this->urlService->getBaseUri() . 'user/index';
-                        if ($this->securityService->checkHash($this->request->getPost('password'), $user->getPassword())) :
+                        if ($this->securityService->checkHash(
+                            $this->request->getPost('password'),
+                            $user->getPassword()
+                        )) :
                             $this->sessionService->set('auth', ['id' => (string)$user->getId()]);
                             $this->eventsManager->fire(UserEnum::ON_LOGIN_SUCCESS_LISTENER->value, $user);
                             $this->flashService->setSucces(TranslationEnum::USER_LOGIN_SUCCESS->name);
@@ -96,7 +104,9 @@ class IndexController extends AbstractControllerFrontend
             User::class,
             'Forced password reset for ' . $user->getEmail()
         );
-        $item = $this->itemRepository->getById($this->settingService->get(SettingsEnum::USER_PAGE_PASSWORDFORGOTEMAIL->name));
+        $item = $this->itemRepository->getById(
+            $this->settingService->get(SettingsEnum::USER_PAGE_PASSWORDFORGOTEMAIL->name)
+        );
 
         return $this->urlService->getBaseUri() . $item->getSlug();
     }

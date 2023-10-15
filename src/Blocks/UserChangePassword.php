@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace VitesseCms\User\Blocks;
 
@@ -18,6 +19,6 @@ class UserChangePassword extends AbstractBlockModel
     {
         parent::parse($block);
 
-        $block->set('loggedIn', $this->di->user->isLoggedIn());
+        $block->set('loggedIn', $this->getDi()->get('user')->isLoggedIn());
     }
 }
