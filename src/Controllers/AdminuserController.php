@@ -1,7 +1,10 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace VitesseCms\User\Controllers;
 
+use ArrayIterator;
+use stdClass;
 use VitesseCms\Admin\Interfaces\AdminModelAddableInterface;
 use VitesseCms\Admin\Interfaces\AdminModelDeletableInterface;
 use VitesseCms\Admin\Interfaces\AdminModelEditableInterface;
@@ -30,11 +33,11 @@ class AdminuserController extends AbstractControllerAdmin implements
     AdminModelListInterface,
     AdminModelAddableInterface
 {
-    use TraitAdminModelDeletable,
-        TraitAdminModelAddable,
-        TraitAdminModelEditable,
-        TraitAdminModelPublishable,
-        TraitAdminModelList;
+    use TraitAdminModelAddable;
+    use TraitAdminModelDeletable;
+    use TraitAdminModelEditable;
+    use TraitAdminModelList;
+    use TraitAdminModelPublishable;
 
     private readonly UserRepository $userRepository;
 
@@ -42,14 +45,14 @@ class AdminuserController extends AbstractControllerAdmin implements
     {
         parent::OnConstruct();
 
-        $this->userRepository = $this->eventsManager->fire(UserEnum::GET_REPOSITORY->value, new \stdClass());
+        $this->userRepository = $this->eventsManager->fire(UserEnum::GET_REPOSITORY->value, new stdClass());
     }
 
     public function getModel(string $id): ?AbstractCollection
     {
         return match ($id) {
             'new' => new User(),
-            default => $this->userRepository->getById($id,false)
+            default => $this->userRepository->getById($id, false)
         };
     }
 
@@ -58,7 +61,7 @@ class AdminuserController extends AbstractControllerAdmin implements
         return new UserForm();
     }
 
-    public function getModelList(?FindValueIterator $findValueIterator): \ArrayIterator
+    public function getModelList(?FindValueIterator $findValueIterator): ArrayIterator
     {
         return $this->userRepository->findAll(
             $findValueIterator,

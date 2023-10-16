@@ -1,7 +1,10 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace VitesseCms\User\Forms;
 
+use stdClass;
 use VitesseCms\Admin\Interfaces\AdminModelFormInterface;
 use VitesseCms\Datagroup\Enums\DatagroupEnum;
 use VitesseCms\Datagroup\Repositories\DatagroupRepository;
@@ -24,13 +27,17 @@ class UserForm extends AbstractForm implements AdminModelFormInterface
     {
         parent::__construct($entity, $userOptions);
 
-        $this->permissionRoleRepository = $this->eventsManager->fire(PermissionRoleEnum::GET_REPOSITORY->value, new \stdClass());
-        $this->settingService = $this->eventsManager->fire(SettingEnum::ATTACH_SERVICE_LISTENER->value, new \stdClass());
-        $this->datagroupRepository = $this->eventsManager->fire(DatagroupEnum::GET_REPOSITORY->value, new \stdClass());
+        $this->permissionRoleRepository = $this->eventsManager->fire(
+            PermissionRoleEnum::GET_REPOSITORY->value,
+            new stdClass()
+        );
+        $this->settingService = $this->eventsManager->fire(SettingEnum::ATTACH_SERVICE_LISTENER->value, new stdClass());
+        $this->datagroupRepository = $this->eventsManager->fire(DatagroupEnum::GET_REPOSITORY->value, new stdClass());
     }
 
     public function buildForm(): void
     {
+        $this->addEmail('%CORE_NAME%', 'name', (new Attributes())->setRequired());
         $this->addEmail('%CORE_EMAIL%', 'email', (new Attributes())->setRequired())
             ->addDropdown(
                 '%ADMIN_ROLE%',
@@ -44,7 +51,9 @@ class UserForm extends AbstractForm implements AdminModelFormInterface
         endif;
 
         if ($this->settingService->has('USER_DATAGROUP_PERSONALINFORMATION')) :
-            $datagroup = $this->datagroupRepository->getById($this->settingService->get('USER_DATAGROUP_PERSONALINFORMATION'));
+            $datagroup = $this->datagroupRepository->getById(
+                $this->settingService->get('USER_DATAGROUP_PERSONALINFORMATION')
+            );
             if ($datagroup !== null) {
                 $this->addHtml('<br /><h2>' . $datagroup->getNameField() . '</h2>');
                 $datagroup->buildItemForm($this);

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace VitesseCms\User\Models;
 
@@ -38,7 +40,9 @@ class User extends AbstractCollection
 
     public function afterFetch()
     {
-        $this->set('name', $this->getEmail());
+        if ($this->name === null) {
+            $this->set('name', $this->getEmail());
+        }
 
         parent::afterFetch();
     }
@@ -108,9 +112,11 @@ class User extends AbstractCollection
 
     public function addPersonalInformation(array $data): User
     {
-        if ($this->di->setting->has(SettingsEnum::USER_DATAGROUP_PERSONALINFORMATION->name)) :
+        if ($this->getDI()->get('setting')->has(SettingsEnum::USER_DATAGROUP_PERSONALINFORMATION->name)) :
             /** @var Datagroup $datagroup */
-            $datagroup = Datagroup::findById($this->di->setting->get(SettingsEnum::USER_DATAGROUP_PERSONALINFORMATION->name));
+            $datagroup = Datagroup::findById(
+                $this->getDI()->get('setting')->getString(SettingsEnum::USER_DATAGROUP_PERSONALINFORMATION->name)
+            );
             if ($datagroup) :
                 UserFactory::bindByDatagroup($datagroup, $data, $this, new DatafieldRepository());
             endif;
