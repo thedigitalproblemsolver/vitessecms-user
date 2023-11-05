@@ -1,8 +1,11 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace VitesseCms\User;
 
 use Phalcon\Di\DiInterface;
+use VitesseCms\Block\Models\Block;
 use VitesseCms\Block\Repositories\BlockRepository;
 use VitesseCms\Content\Repositories\ItemRepository;
 use VitesseCms\Core\AbstractModule;
@@ -17,13 +20,16 @@ class Module extends AbstractModule
     public function registerServices(DiInterface $di, string $string = null)
     {
         parent::registerServices($di, 'User');
-        $di->setShared('repositories', new RepositoryCollection(
-            new UserRepository(),
-            new ItemRepository(),
-            new PermissionRoleRepository(),
-            new BlockRepository(),
-            new DatagroupRepository(),
-            new DatafieldRepository()
-        ));
+        $di->setShared(
+            'repositories',
+            new RepositoryCollection(
+                new UserRepository(),
+                new ItemRepository(),
+                new PermissionRoleRepository(),
+                new BlockRepository(Block::class),
+                new DatagroupRepository(),
+                new DatafieldRepository()
+            )
+        );
     }
 }
