@@ -102,7 +102,7 @@ class User extends AbstractCollection
 
         $user = new self();
         $user->set('email', $email);
-        $user->set('password', $this->di->security->hash($password));
+        $user->set('password', $this->getDI()->get('security')->hash($password));
         $user->set('role', (string)$role->getId());
         $user->set('published', true);
         $user->save();
