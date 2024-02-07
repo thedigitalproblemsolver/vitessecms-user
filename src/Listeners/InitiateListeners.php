@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace VitesseCms\User\Listeners;
 
@@ -14,15 +15,18 @@ use VitesseCms\User\Repositories\UserRepository;
 
 class InitiateListeners implements InitiateListenersInterface
 {
-    public static function setListeners(InjectableInterface $di): void
+    public static function setListeners(InjectableInterface $injectable): void
     {
-        if (UserRoleEnum::isSuperAdmin($di->user->getPermissionRole())) :
-            $di->eventsManager->attach('adminMenu', new AdminMenuPermissionListener());
+        if (UserRoleEnum::isSuperAdmin($injectable->user->getPermissionRole())) :
+            $injectable->eventsManager->attach('adminMenu', new AdminMenuPermissionListener());
         endif;
-        if ($di->user->hasAdminAccess()) :
-            $di->eventsManager->attach('adminMenu', new AdminMenuListener());
+        if ($injectable->user->hasAdminAccess()) :
+            $injectable->eventsManager->attach('adminMenu', new AdminMenuListener());
         endif;
-        $di->eventsManager->attach(UserEnum::SERVICE_LISTENER->value, new UserListener($di->user, new UserRepository()));
-        $di->eventsManager->attach(AclEnum::SERVICE_LISTENER->value, new AclServiceListener($di->acl));
+        $injectable->eventsManager->attach(
+            UserEnum::SERVICE_LISTENER->value,
+            new UserListener($injectable->user, new UserRepository())
+        );
+        $injectable->eventsManager->attach(AclEnum::SERVICE_LISTENER->value, new AclServiceListener($injectable->acl));
     }
 }

@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 
 namespace VitesseCms\User\Listeners;
 
@@ -23,28 +24,40 @@ use VitesseCms\User\Repositories\UserRepository;
 
 class InitiateAdminListeners implements InitiateListenersInterface
 {
-    public static function setListeners(InjectableInterface $di): void
+    public static function setListeners(InjectableInterface $injectable): void
     {
-        if (UserRoleEnum::isSuperAdmin($di->user->getPermissionRole())) :
-            $di->eventsManager->attach('adminMenu', new AdminMenuPermissionListener());
+        if (UserRoleEnum::isSuperAdmin($injectable->user->getPermissionRole())) :
+            $injectable->eventsManager->attach('adminMenu', new AdminMenuPermissionListener());
         endif;
-        $di->eventsManager->attach('adminMenu', new AdminMenuListener());
-        $di->eventsManager->attach(AdminuserController::class, new AdminuserControllerListener(
-            new PermissionRoleRepository(),
-            $di->user,
-            $di->flash,
-            $di->request,
-            $di->security,
-            $di->setting,
-            $di->eventsManager,
-            new DatagroupRepository(),
-            new DatafieldRepository()
-        ));
-        $di->eventsManager->attach(AdminpermissionroleController::class, new AdminpermissionroleControllerListener());
-        $di->eventsManager->attach(AclEnum::SERVICE_LISTENER->value, new AclServiceListener($di->acl));
-        $di->eventsManager->attach(UserEnum::SERVICE_LISTENER->value, new UserListener($di->user, new UserRepository()));
-        $di->eventsManager->attach(PermissionRoleEnum::LISTENER->value, new PermissionRoleListener(
-            new PermissionRoleRepository()
-        ));
+        $injectable->eventsManager->attach('adminMenu', new AdminMenuListener());
+        $injectable->eventsManager->attach(
+            AdminuserController::class,
+            new AdminuserControllerListener(
+                new PermissionRoleRepository(),
+                $injectable->user,
+                $injectable->flash,
+                $injectable->request,
+                $injectable->security,
+                $injectable->setting,
+                $injectable->eventsManager,
+                new DatagroupRepository(),
+                new DatafieldRepository()
+            )
+        );
+        $injectable->eventsManager->attach(
+            AdminpermissionroleController::class,
+            new AdminpermissionroleControllerListener()
+        );
+        $injectable->eventsManager->attach(AclEnum::SERVICE_LISTENER->value, new AclServiceListener($injectable->acl));
+        $injectable->eventsManager->attach(
+            UserEnum::SERVICE_LISTENER->value,
+            new UserListener($injectable->user, new UserRepository())
+        );
+        $injectable->eventsManager->attach(
+            PermissionRoleEnum::LISTENER->value,
+            new PermissionRoleListener(
+                new PermissionRoleRepository()
+            )
+        );
     }
 }
