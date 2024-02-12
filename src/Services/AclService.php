@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace VitesseCms\User\Services;
 
@@ -21,7 +23,7 @@ class AclService
     {
         return PermissionUtils::check(
             $this->activeUser,
-            $this->routerService->getModulePrefix() . $this->routerService->getModuleName(),
+            $this->routerService->getModulePrefix().$this->routerService->getModuleName(),
             $this->routerService->getControllerName(),
             $function
         );
